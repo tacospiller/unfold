@@ -47,34 +47,43 @@ namespace Unfold.Pages
 
             AddAxis(group);
 
-            var vfoldStr = new SymmetricVFoldStructure { AngleABY = Angles.Deg30, AngleABD = Angles.Deg45 };
-            var vfold2Str = new ChildStructure(vfoldStr, new SymmetricVFoldStructure { AngleABY = Angles.Deg60, AngleABD = Angles.Deg60, DistAB = 0.5, DistBD = 0.5 }, vfoldStr.ABOuterFold) { OffsetY = 0.5 };
-            var vfold = new StructureMesh(vfoldStr, Colors.DeepPink, Colors.DeepSkyBlue);
-            var parl = new StructureMesh(new ChildStructure(vfoldStr, new SymmetricParallelStructure { DistFromAxis = 0.2, Width = 0.3, Height = 0.2 }, vfoldStr.CBOuterFold) { OffsetY = 0.5}, Colors.DarkGreen, Colors.DarkOrange);
-            var parl2 = new StructureMesh(vfold2Str, Colors.DarkGreen, Colors.DarkOrange);
-            var vfold2 = new StructureMesh(new ChildStructure(vfold2Str, new SymmetricParallelStructure { DistFromAxis = 0.2, Width = 0.3, Height = 0.2 }, ((SymmetricVFoldStructure)vfold2Str.Child).CBOuterFold) { OffsetY = 0.1 }, Colors.Gray, Colors.RosyBrown);
-            group.Children.Add(vfold.Model3D);
-            group.Children.Add(parl.Model3D);
-            group.Children.Add(parl2.Model3D);
-            group.Children.Add(vfold2.Model3D);
+            var baseAxis = new ManualAxis();
+            var baseCard = new BaseCardStructure(baseAxis) { Height = 2, Width = 1.5 };
+            var vfold = new SymmetricVFoldStructure(((IAxis)baseAxis).Offset(0.5)) { Psi = Angles.Deg60 };
+            var par = new SymmetricParallelStructure(vfold.ABOuterFold.Offset(0.5)) { DistFromAxis = 0.2, Width = 0.3, Height = 0.2 };
+            var vfold2 = new SymmetricVFoldStructure(vfold.CBOuterFold.Offset(0.3)) { Theta = Angles.Deg30, Psi = Angles.Deg60, DistA = 0.5, DistD = 0.5 };
+            var vfold3 = new SymmetricVFoldStructure(vfold2.CBOuterFold.Offset(0.1)) { Theta = Angles.Deg30, Psi = Angles.Deg30, DistA = 0.3, DistD = 0.3 };
+
+            var baseCardModel = new StructureMesh(baseCard, Colors.DeepPink, Colors.DeepSkyBlue);
+            var vfoldModel = new StructureMesh(vfold, Colors.DarkViolet, Colors.DarkTurquoise);
+            var parlModel = new StructureMesh(par, Colors.Beige, Colors.DarkGray);
+            var vfoldModel2 = new StructureMesh(vfold2, Colors.LightSteelBlue, Colors.DarkOrange);
+            var vfoldModel3 = new StructureMesh(vfold3, Colors.DarkOliveGreen, Colors.DarkOrchid);
+
+            group.Children.Add(baseCardModel.Model3D);
+            group.Children.Add(vfoldModel.Model3D);
+            group.Children.Add(parlModel.Model3D);
+            group.Children.Add(vfoldModel2.Model3D);
+            group.Children.Add(vfoldModel3.Model3D);
 
             var inv = false;
             CompositionTarget.Rendering += (_, _) =>
             {
-                vfold.Structure.FoldAngle += inv ? -0.05 : 0.05;
-                vfold.Recalculate();
-                parl.Recalculate();
-                parl2.Recalculate();
-                //vfold2.Structure.FoldAngle = vfold.Structure.FoldAngle;
-                vfold2.Recalculate();
-                if (vfold.Structure.FoldAngle < 0.2)
+                baseAxis.SetAngle(baseAxis.Angle + (!inv ? 0.02 : -0.02));
+                if (baseAxis.Angle < 0.2)
                 {
                     inv = false;
                 }
-                if (vfold.Structure.FoldAngle > vfold.Structure.MaxAngle - 0.2)
+                if (baseAxis.Angle > Math.PI - 0.2)
                 {
                     inv = true;
                 }
+
+                baseCardModel.Recalculate();
+                vfoldModel.Recalculate();
+                parlModel.Recalculate();
+                vfoldModel2.Recalculate();
+                vfoldModel3.Recalculate();
             };
 
             return group;

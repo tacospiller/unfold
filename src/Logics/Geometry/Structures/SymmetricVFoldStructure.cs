@@ -3,54 +3,50 @@ using System.Numerics;
 
 namespace Unfold.UnfoldGeometry
 {
-    public class SymmetricVFoldStructure : IStructure
+    public class SymmetricVFoldStructure : BaseStructure
     {
         // B is the origin point. segment AB and CB are attached to base. D is a free floating(calculated) point. 
         // Triangle ABD and CBD are moving faces of the v-fold.
-        public double AngleABY { get; init; } = Angles.Deg60;
-        public double AngleABD { get; init; } = Angles.Deg90;
-        public double DistAB { get; init; } = 1;
-        public double DistBD { get; init; } = 1;
-        // "unfolding" angle
-        public double FoldAngle { get; set; } = Angles.Deg0;
-        public double AngleAYC => FoldAngle;
+        public double Theta { get; init; } = Angles.Deg60;
+        public double Psi { get; init; } = Angles.Deg90;
+        public double DistA { get; init; } = 1;
+        public double DistD { get; init; } = 1;
+        public double AngleAYC => Axis.Angle;
 
-        public Vector3 A => new Vector3((float)(DistAB * Math.Sin(AngleABY)), (float)(DistAB * Math.Cos(AngleABY)), 0);
-        public Vector3 C => new Vector3((float)(DistAB * Math.Sin(AngleABY) * Math.Cos(AngleAYC)), (float)(DistAB * Math.Cos(AngleABY)), (float)(DistAB * Math.Sin(AngleABY) * Math.Sin(AngleAYC)));
+        public Vector3 A => new Vector3((float)(DistA * Math.Sin(Theta)), (float)(DistA * Math.Cos(Theta)), 0);
+        public Vector3 C => new Vector3((float)(DistA * Math.Sin(Theta) * Math.Cos(AngleAYC)), (float)(DistA * Math.Cos(Theta)), (float)(DistA * Math.Sin(Theta) * Math.Sin(AngleAYC)));
         public Vector3 B => new Vector3(0, 0, 0);
-        public Vector3 DInitial => new Vector3((float)(DistBD * Math.Sin(AngleABY + AngleABD)), (float)(DistBD * Math.Cos(AngleABY + AngleABD)), 0);
-        public Vector3 DFinal => new Vector3((float)(DistBD * Math.Sin(AngleABY + AngleABD) * Math.Cos(AngleAYC)), (float)(DistBD * Math.Cos(AngleABY + AngleABD)), (float)(DistBD * Math.Sin(AngleABY + AngleABD) * Math.Sin(AngleAYC)));
+        public Vector3 DInitial => new Vector3((float)(DistD * Math.Sin(Theta + Psi)), (float)(DistD * Math.Cos(Theta + Psi)), 0);
+        public Vector3 DFinal => new Vector3((float)(DistD * Math.Sin(Theta + Psi) * Math.Cos(AngleAYC)), (float)(DistD * Math.Cos(Theta + Psi)), (float)(DistD * Math.Sin(Theta + Psi) * Math.Sin(AngleAYC)));
         public double DistAD => (DInitial - A).Length();
-        public Vector3 D => UnfoldMath.Trilaterate(B, A, C, DistBD, DistAD, DistAD);
+        public Vector3 D => UnfoldMath.Trilaterate(B, A, C, DistD, DistAD, DistAD);
 
-        public double MaxAngle => Angles.Deg90 * 2; // todo
-        public Vector3[] Faces => new Vector3[] { B, A, D,   C, B, D };
-
-
-        public Fold ABOuterFold
+        public override double MaxAngle => Angles.Deg90 * 2; // todo
+        protected override Vector3[] CalculateUntransformedFaces()
         {
-            get
-            {
-                return new Fold(() =>
-                {
-                    return Matrix4x4.CreateRotationZ((float)-AngleABY);
-                }, () =>
-                {
-                    return UnfoldMath.GetAngle(Plane.CreateFromVertices(A, B, D).Normal, Plane.CreateFromVertices(A, B, DInitial).Normal);
-                });
-            }
+            return new Vector3[] { B, A, D, C, B, D };
         }
 
-        public Fold CBOuterFold
+        public IAxis ABOuterFold
         {
             get
             {
-                return new Fold(() =>
+                return new DynamicAxis(
+                    () => { return Matrix4x4.CreateRotationZ((float)-Theta) * Axis.Transform; },
+                    () => { return UnfoldMath.GetAngle(Plane.CreateFromVertices(A, B, D).Normal, Plane.CreateFromVertices(A, B, DInitial).Normal); }
+                    );
+            }
+        }
+        public IAxis CBOuterFold
+        {
+            get
+            {
+                return new DynamicAxis(() =>
                 {
                     var rot = Matrix4x4.CreateRotationY((float)-AngleAYC);
-                    var rot2 = Matrix4x4.CreateRotationZ((float)-AngleABY);
+                    var rot2 = Matrix4x4.CreateRotationZ((float)-Theta);
                     var flip = Matrix4x4.CreateReflection(Plane.CreateFromVertices(B, C, DFinal));
-                    return rot2 * rot * flip;
+                    return rot2 * rot * flip * Axis.Transform;
                 }, () =>
                 {
                     return UnfoldMath.GetAngle(Plane.CreateFromVertices(C, B, D).Normal, Plane.CreateFromVertices(C, B, DFinal).Normal);
@@ -58,8 +54,8 @@ namespace Unfold.UnfoldGeometry
             }
         }
 
-
-        public SymmetricVFoldStructure()
-        { }
+        public SymmetricVFoldStructure(IAxis axis) : base(axis)
+        {
+        }
     }
 }

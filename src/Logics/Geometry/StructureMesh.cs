@@ -27,7 +27,7 @@ namespace Unfold.UnfoldGeometry
 
         public void Recalculate()
         {
-            _mesh.Positions = new Point3DCollection(Structure.Faces.Select(x => x.ToPoint3D()));
+            _mesh.Positions = new Point3DCollection(Structure.CalculateFaces().Select(x => x.ToPoint3D()));
         }
     }
 }

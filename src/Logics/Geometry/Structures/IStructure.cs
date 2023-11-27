@@ -4,8 +4,8 @@ namespace Unfold.UnfoldGeometry
 {
     public interface IStructure
     {
-        double FoldAngle { get; set; }
+        public IAxis Axis { get; }
         double MaxAngle { get; }
-        Vector3[] Faces { get; }
+        Vector3[] CalculateFaces();
     }
 }
