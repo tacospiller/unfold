@@ -16,7 +16,18 @@ namespace Unfold.UnfoldGeometry
         public Vector3 A => new Vector3((float)DistFromAxis, (float)Height, 0);
         public Vector3 B => new Vector3((float)(DistFromAxis * Math.Cos(FoldAngle)), (float)Height, (float)(DistFromAxis * Math.Sin(FoldAngle)));
         public Vector3 CInitial => new Vector3((float)(DistFromAxis + Width), (float)Height, 0);
-        public Vector3 C => UnfoldMath.Trilaterate(B, A, D, Width, Width, (CInitial - D).Length());
+        public Vector3 C
+        {
+            get
+            {
+                var N = Vector3.Normalize(new Vector3((float)(DistFromAxis * Math.Cos(FoldAngle / 2)), 0, (float)(DistFromAxis * Math.Sin(FoldAngle / 2))));
+                var a = DistFromAxis;
+                var r = Width;
+                var h = Math.Sqrt((r * r) - (a * a * Math.Sin(FoldAngle / 2) * Math.Sin(FoldAngle / 2))) + (a * Math.Cos(FoldAngle / 2));
+                N *= (float)h;
+                return new Vector3(N.X, (float)Height, N.Z);
+            }
+        }
         public Vector3 D => A + new Vector3(0, (float)-Height, 0);
         public Vector3 E => B + new Vector3(0, (float)-Height, 0);
         public Vector3 F => C + new Vector3(0, (float)-Height, 0);

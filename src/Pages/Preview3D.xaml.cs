@@ -23,7 +23,7 @@ namespace Unfold.Pages
 
         private Camera GetDefaultCamera()
         {
-            var p = new Point3D(1,2,5);
+            var p = new Point3D(2,2,5);
             var o = new Point3D(0, 0, 0);
             var camera = new PerspectiveCamera(p, o - p, new Vector3D(0,1,0), 60 );
       
@@ -47,14 +47,26 @@ namespace Unfold.Pages
 
             AddAxis(group);
 
-            var vfold = new StructureMesh();
+            var vfoldStr = new SymmetricVFoldStructure { AngleABY = Angles.Deg30, AngleABD = Angles.Deg45 };
+            var vfold2Str = new ChildStructure(vfoldStr, new SymmetricVFoldStructure { AngleABY = Angles.Deg60, AngleABD = Angles.Deg60, DistAB = 0.5, DistBD = 0.5 }, vfoldStr.ABOuterFold) { OffsetY = 0.5 };
+            var vfold = new StructureMesh(vfoldStr, Colors.DeepPink, Colors.DeepSkyBlue);
+            var parl = new StructureMesh(new ChildStructure(vfoldStr, new SymmetricParallelStructure { DistFromAxis = 0.2, Width = 0.3, Height = 0.2 }, vfoldStr.CBOuterFold) { OffsetY = 0.5}, Colors.DarkGreen, Colors.DarkOrange);
+            var parl2 = new StructureMesh(vfold2Str, Colors.DarkGreen, Colors.DarkOrange);
+            var vfold2 = new StructureMesh(new ChildStructure(vfold2Str, new SymmetricParallelStructure { DistFromAxis = 0.2, Width = 0.3, Height = 0.2 }, ((SymmetricVFoldStructure)vfold2Str.Child).CBOuterFold) { OffsetY = 0.1 }, Colors.Gray, Colors.RosyBrown);
             group.Children.Add(vfold.Model3D);
+            group.Children.Add(parl.Model3D);
+            group.Children.Add(parl2.Model3D);
+            group.Children.Add(vfold2.Model3D);
 
             var inv = false;
             CompositionTarget.Rendering += (_, _) =>
             {
                 vfold.Structure.FoldAngle += inv ? -0.05 : 0.05;
                 vfold.Recalculate();
+                parl.Recalculate();
+                parl2.Recalculate();
+                //vfold2.Structure.FoldAngle = vfold.Structure.FoldAngle;
+                vfold2.Recalculate();
                 if (vfold.Structure.FoldAngle < 0.2)
                 {
                     inv = false;

@@ -10,7 +10,7 @@ namespace Unfold.UnfoldGeometry
 {
     internal static class UnfoldMath
     {
-        static private double Precision = 1e-2;
+        static private double Precision = 1e-6;
         static public Vector3 Trilaterate(Vector3 p1, Vector3 p2, Vector3 p3, double r1, double r2, double r3)
         {
             if (!IsTriangle(p1, p2, p3))
@@ -104,14 +104,14 @@ namespace Unfold.UnfoldGeometry
 
         static public Matrix4x4 GetRotationMatrix(Vector3 from, Vector3 to)
         {
-            from = Vector3.Normalize(from);
-            to = Vector3.Normalize(to);
-            var axis = Vector3.Normalize(Vector3.Cross(from, to));
+            var nfrom = Vector3.Normalize(from);
+            var nto = Vector3.Normalize(to);
+            var axis = Vector3.Normalize(Vector3.Cross(nfrom, nto));
             if (float.IsNaN(axis.X))
             {
                 return Matrix4x4.Identity;
             }
-            var angle = Math.Acos(Vector3.Dot(from, to));
+            var angle = Math.Acos(Vector3.Dot(nfrom, nto));
 
             var quat = GetQuaternion(axis, angle);
             var mat = Matrix4x4.CreateFromQuaternion(quat);
@@ -133,6 +133,13 @@ namespace Unfold.UnfoldGeometry
         {
             var mat = Matrix4x4.CreateTranslation(to - from);
             return mat;
+        }
+
+        static public double GetAngle(Vector3 a, Vector3 b)
+        {
+            a = Vector3.Normalize(a);
+            b = Vector3.Normalize(b);
+            return Math.Acos(Vector3.Dot(a, b));
         }
     }
 }
