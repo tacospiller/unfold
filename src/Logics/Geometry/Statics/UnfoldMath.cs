@@ -109,14 +109,7 @@ namespace Unfold.UnfoldGeometry
             var axis = Vector3.Normalize(Vector3.Cross(from, to));
             if (float.IsNaN(axis.X))
             {
-                if (from.Y == 0 && from.Z == 0)
-                {
-                    axis = Vector3.UnitY;
-                }
-                else
-                {
-                    axis = Vector3.Normalize(Vector3.Cross(from, from + new Vector3(1, 0, 0)));
-                }
+                return Matrix4x4.Identity;
             }
             var angle = Math.Acos(Vector3.Dot(from, to));
 
