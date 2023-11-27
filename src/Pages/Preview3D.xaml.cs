@@ -47,43 +47,22 @@ namespace Unfold.Pages
 
             AddAxis(group);
 
-            var vfold = new VFold() { AO = 1, CO = 1, Psi = Angles.Deg30 };
-            var vfoldModel = new GeometryModel3D()
-            {
-                Geometry = vfold.Geometry,
-                Material = new DiffuseMaterial(new SolidColorBrush(Colors.DeepPink)),
-                BackMaterial = new DiffuseMaterial(new SolidColorBrush(Colors.DeepSkyBlue)),
-            };
-
-            var tf = Matrix3D.Identity;
-            tf.OffsetY = 0.2;
-            tf.Rotate(new Quaternion(new Vector3D(0, 0, 1), -30));
-            var vfold2 = new VFold { AO = 0.5, CO = 0.5, Theta = Angles.Deg30, Psi = Angles.Deg60, Transform = tf };
-            var vfoldModel2 = new GeometryModel3D()
-            {
-                Geometry = vfold2.Geometry,
-                Material = new DiffuseMaterial(new SolidColorBrush(Colors.DarkGreen)),
-                BackMaterial = new DiffuseMaterial(new SolidColorBrush(Colors.DarkOrange)),
-            };
-
-            group.Children.Add(vfoldModel);
-            group.Children.Add(vfoldModel2);
+            var vfold = new StructureMesh();
+            group.Children.Add(vfold.Model3D);
 
             var inv = false;
             CompositionTarget.Rendering += (_, _) =>
             {
-
-                vfold.Alpha += !inv ? 0.05 : -0.05;
-                vfold2.Alpha = vfold.TempAngle();
-                if (vfold.Alpha >= Math.PI - 0.05)
-                {
-                    inv = true;
-                }
-                if (vfold.Alpha <= 0.05)
+                vfold.Structure.FoldAngle += inv ? -0.05 : 0.05;
+                vfold.Recalculate();
+                if (vfold.Structure.FoldAngle < 0.2)
                 {
                     inv = false;
                 }
-                //vfold.Alpha = vfold.Alpha;
+                if (vfold.Structure.FoldAngle > Math.PI - 0.2)
+                {
+                    inv = true;
+                }
             };
 
             return group;
