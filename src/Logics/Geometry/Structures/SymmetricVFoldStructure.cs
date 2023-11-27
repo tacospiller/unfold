@@ -21,6 +21,9 @@ namespace Unfold.UnfoldGeometry
         public Vector3 DInitial => new Vector3((float)(DistBD * Math.Sin(AngleABY + AngleABD)), (float)(DistBD * Math.Cos(AngleABY + AngleABD)), 0);
         public double DistAD => (DInitial - A).Length();
         public Vector3 D => UnfoldMath.Trilaterate(B, A, C, DistBD, DistAD, DistAD);
+
+        // TODO 
+        public double MaxAngle => Angles.Deg90 * 2;
         public Vector3[] Faces => new Vector3[] { B, A, D,   C, B, D };
 
         public SymmetricVFoldStructure()

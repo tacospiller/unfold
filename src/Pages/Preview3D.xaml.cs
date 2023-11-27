@@ -59,7 +59,7 @@ namespace Unfold.Pages
                 {
                     inv = false;
                 }
-                if (vfold.Structure.FoldAngle > Math.PI - 0.2)
+                if (vfold.Structure.FoldAngle > vfold.Structure.MaxAngle - 0.2)
                 {
                     inv = true;
                 }

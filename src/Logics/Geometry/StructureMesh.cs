@@ -13,7 +13,7 @@ namespace Unfold.UnfoldGeometry
 
         public StructureMesh()
         {
-            Structure = Structure ?? new SymmetricParallelStructure();
+            Structure = Structure ?? new AngleDividerStructure();
             _mesh = new MeshGeometry3D();
             Model3D = Model3D ?? new GeometryModel3D
             {
