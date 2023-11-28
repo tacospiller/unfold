@@ -3,7 +3,7 @@ using System.Numerics;
 
 namespace Unfold.UnfoldGeometry
 {
-    public class SymmetricVFoldStructure : BaseStructure
+    public class SymmetricVFoldStructure : RotatingStructure
     {
         // B is the origin point. segment AB and CB are attached to base. D is a free floating(calculated) point. 
         // Triangle ABD and CBD are moving faces of the v-fold.
@@ -21,13 +21,12 @@ namespace Unfold.UnfoldGeometry
         public double DistAD => (DInitial - A).Length();
         public Vector3 D => UnfoldMath.Trilaterate(B, A, C, DistD, DistAD, DistAD);
 
-        public override double MaxAngle => Angles.Deg90 * 2; // todo
         protected override Vector3[] CalculateUntransformedFaces()
         {
             return new Vector3[] { B, A, D, C, B, D };
         }
 
-        public IAxis ABOuterFold
+        public IAxis AOuterAxis
         {
             get
             {
@@ -37,7 +36,7 @@ namespace Unfold.UnfoldGeometry
                     );
             }
         }
-        public IAxis CBOuterFold
+        public IAxis COuterAxis
         {
             get
             {
@@ -50,6 +49,34 @@ namespace Unfold.UnfoldGeometry
                 }, () =>
                 {
                     return UnfoldMath.GetAngle(Plane.CreateFromVertices(C, B, D).Normal, Plane.CreateFromVertices(C, B, DFinal).Normal);
+                });
+            }
+        }
+
+        public IFace FaceABD
+        {
+            get
+            {
+                return new DynamicFace(() =>
+                {
+                    var face = Plane.CreateFromVertices(A, B, D);
+                    var rot = UnfoldMath.GetRotationMatrix(Vector3.UnitZ, face.Normal);
+                    return rot * Axis.Transform;
+                });
+            }
+        }
+
+        public IFace FaceCBD
+        {
+            get
+            {
+                return new DynamicFace(() =>
+                {
+                    var face = Plane.CreateFromVertices(C, B, D);
+                    var rot = UnfoldMath.GetRotationMatrix(Vector3.UnitZ, face.Normal);
+                    var rot2 = UnfoldMath.GetRotationMatrix(Vector3.Transform(Vector3.UnitY, rot), Vector3.Normalize(C));
+
+                    return rot * rot2 * Axis.Transform;
                 });
             }
         }

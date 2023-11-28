@@ -3,12 +3,11 @@ using System.Numerics;
 
 namespace Unfold.UnfoldGeometry
 {
-    public abstract class BaseStructure : IStructure
+    public abstract class RotatingStructure : IStructure
     {
-        public virtual IAxis Axis { get; }
-        public virtual double MaxAngle { get; }
+        protected virtual IAxis Axis { get; }
 
-        public BaseStructure(IAxis axis)
+        public RotatingStructure(IAxis axis)
         {
             Axis = axis;
         }

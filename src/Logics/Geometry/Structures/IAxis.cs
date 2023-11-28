@@ -7,7 +7,7 @@ namespace Unfold.UnfoldGeometry
         Matrix4x4 Transform { get; }
         double Angle { get; }
 
-        IAxis Offset(double offsetY)
+        IAxis OffsetY(double offsetY)
         {
             return new OffsetAxis(offsetY, this);
         }

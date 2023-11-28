@@ -113,15 +113,9 @@ namespace Unfold.UnfoldGeometry
             }
             var angle = Math.Acos(Vector3.Dot(nfrom, nto));
 
-            var quat = GetQuaternion(axis, angle);
-            var mat = Matrix4x4.CreateFromQuaternion(quat);
+            var mat = Matrix4x4.CreateFromAxisAngle(axis, (float)angle);
             
             return mat;
-        }
-
-        static private System.Numerics.Quaternion GetQuaternion(Vector3 axis, double angle)
-        {
-            return System.Numerics.Quaternion.Normalize(new System.Numerics.Quaternion((float)(axis.X * Math.Sin(angle / 2)), (float)(axis.Y * Math.Sin(angle / 2)), (float)(axis.Z * Math.Sin(angle / 2)), (float)Math.Cos(angle / 2)));
         }
 
         static public Matrix4x4 GetScaleMatrix(Vector3 from, Vector3 to)

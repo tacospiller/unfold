@@ -3,9 +3,8 @@ using System.Numerics;
 
 namespace Unfold.UnfoldGeometry
 {
-    public class BaseCardStructure : BaseStructure
+    public class BaseCardStructure : RotatingStructure
     {
-        public override double MaxAngle => Math.PI * 2;
         public double Width { get; init; } = 1;
         public double Height { get; init; } = 1.2;
 
