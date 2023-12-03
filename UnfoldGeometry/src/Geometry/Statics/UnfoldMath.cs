@@ -4,14 +4,20 @@ namespace Unfold.UnfoldGeometry
 {
     public static class UnfoldMath
     {
-        static private double Precision = 1e-6;
-        static public Vector3 Trilaterate(Vector3 p1, Vector3 p2, Vector3 p3, double r1, double r2, double r3)
+        static public double EqualThreshold = 1e-6;
+
+        public class MathException : Exception
+        {
+            public MathException(string err) : base(err) { }
+        }
+
+        static public Vector3 Trilaterate(Vector3 p1, Vector3 p2, Vector3 p3, double r1, double r2, double r3, bool convex = true)
         {
             if (!IsTriangle(p1, p2, p3))
             {
                 if (p1 == p2 && p2 == p3)
                 {
-                    throw new Exception("No");
+                    throw new MathException("Cannot trilaterate from three equal points.");
                 }
                 if (p1 == p2)
                 {
@@ -42,14 +48,18 @@ namespace Unfold.UnfoldGeometry
             var p3c = Vector3.Transform(p3b, mat3);
 
             // Apply simplified trilateration
-            var q = SimpleTrilateration(p2c, p3c, r1, r2, r3);
+            var q = SimpleTrilateration(p2c, p3c, r1, r2, r3, convex);
 
             // inverse apply 1,2,3
             Matrix4x4.Invert(Matrix4x4.Multiply(Matrix4x4.Multiply(mat1, mat2), mat3), out var mati);
             var qa = Vector3.Transform(q, mati);
-            if (float.IsNaN(qa.X) || float.IsNaN(qa.Y) || float.IsNaN(qa.Z))
+            if (float.IsNaN(qa.X) || float.IsNaN(qa.Y) || float.IsNaN(qa.Z) ||
+                Math.Abs((qa - p1).Length() - r1) > EqualThreshold ||
+                Math.Abs((qa - p2).Length() - r2) > EqualThreshold ||
+                Math.Abs((qa - p3).Length() - r3) > EqualThreshold
+                )
             {
-                throw new Exception("No");
+                throw new MathException("No point satisfies given restriction.");
             }
             return qa;
         }
@@ -74,12 +84,11 @@ namespace Unfold.UnfoldGeometry
         {
             var v12 = Vector3.Normalize(p1 - p2);
             var v23 = Vector3.Normalize(p2 - p3);
-            var v31 = Vector3.Normalize(p3 - p1);
 
             return p1 != p2 && p2 != p3 && p3 != p1 && v12 != v23 && v12 != -v23;
         }
 
-        static private Vector3 SimpleTrilateration(Vector3 a, Vector3 b, double r1, double r2, double r3)
+        static private Vector3 SimpleTrilateration(Vector3 a, Vector3 b, double r1, double r2, double r3, bool convex)
         {
             var u = a.X;
             var vx = b.X;
@@ -90,8 +99,8 @@ namespace Unfold.UnfoldGeometry
             var r3sq = r3 * r3;
 
             var x = (r1sq - r2sq + (u * u)) / (2 * u);
-            var y = Math.Abs(vy) < Precision ? -Math.Sqrt(r1sq - (x * x)) : (r1sq - r3sq + (vx * vx) + (vy * vy) - (2 * vx * x)) / (2 * vy);
-            var z = r1sq - (x * x) - (y * y) < 0 ? 0 : Math.Sqrt(r1sq - (x * x) - (y * y));
+            var y = Math.Abs(vy) < EqualThreshold ? (convex ? 1 : -1) * Math.Sqrt(r1sq - (x * x)) : (r1sq - r3sq + (vx * vx) + (vy * vy) - (2 * vx * x)) / (2 * vy);
+            var z = r1sq - (x * x) - (y * y) < 0 ? 0 : (convex ? 1 : -1) * Math.Sqrt(r1sq - (x * x) - (y * y));
 
             return new Vector3((float)x, (float)y, (float)z);
         }
