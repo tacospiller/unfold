@@ -1,7 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.Numerics;
-using System.Windows.Media.Media3D;
+﻿using System.Numerics;
 
 namespace Unfold.UnfoldGeometry
 {

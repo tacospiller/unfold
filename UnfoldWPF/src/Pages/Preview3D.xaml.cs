@@ -3,6 +3,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
 using Unfold.UnfoldGeometry;
+using Unfold.UnfoldWPF;
 
 namespace Unfold.Pages
 {
@@ -102,33 +103,41 @@ namespace Unfold.Pages
             var axisR = 0.005;
             var xAxis = new GeometryModel3D()
             {
-                Geometry = Shapes.Cylinder,
+                Geometry = Shapes.Cylinder(10).ToGeometry3D(),
                 Material = new DiffuseMaterial(new SolidColorBrush(Colors.Red)),
-                Transform = new ScaleTransform3D(new Vector3D(axisR, axisR, 100))
+                Transform = new Transform3DGroup
+                {
+                    Children = new Transform3DCollection(new Transform3D[] {
+                        new ScaleTransform3D(new Vector3D(axisR, axisR, 100)),
+                        new TranslateTransform3D(0, 0, -50)
+                    })
+                }
             };
 
             var yAxis = new GeometryModel3D()
             {
-                Geometry = Shapes.Cylinder,
+                Geometry = Shapes.Cylinder(10).ToGeometry3D(),
                 Material = new DiffuseMaterial(new SolidColorBrush(Colors.Blue)),
                 Transform = new Transform3DGroup
                 {
                     Children = new Transform3DCollection(new Transform3D[] {
                     new ScaleTransform3D(new Vector3D(axisR, axisR, 100)),
-                    new RotateTransform3D(new AxisAngleRotation3D(new Vector3D(1, 0, 0), 90))
+                    new RotateTransform3D(new AxisAngleRotation3D(new Vector3D(1, 0, 0), 90)),
+                    new TranslateTransform3D(0, 50, 0)
                 })
                 }
             };
 
             var zAxis = new GeometryModel3D()
             {
-                Geometry = Shapes.Cylinder,
+                Geometry = Shapes.Cylinder(10).ToGeometry3D(),
                 Material = new DiffuseMaterial(new SolidColorBrush(Colors.Green)),
                 Transform = new Transform3DGroup
                 {
                     Children = new Transform3DCollection(new Transform3D[] {
                     new ScaleTransform3D(new Vector3D(axisR, axisR, 100)),
-                    new RotateTransform3D(new AxisAngleRotation3D(new Vector3D(0, 1, 0), 90))
+                    new RotateTransform3D(new AxisAngleRotation3D(new Vector3D(0, 1, 0), 90)),
+                    new TranslateTransform3D(-50, 0, 0)
                 })
                 }
             };

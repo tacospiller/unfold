@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media.Media3D;
+﻿using System.Numerics;
 
 namespace Unfold.UnfoldGeometry
 {
-    internal static class UnfoldMath
+    public static class UnfoldMath
     {
         static private double Precision = 1e-6;
         static public Vector3 Trilaterate(Vector3 p1, Vector3 p2, Vector3 p3, double r1, double r2, double r3)

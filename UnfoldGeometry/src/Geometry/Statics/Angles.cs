@@ -1,9 +1,6 @@
-    using System;
-using System.Windows.Media.Media3D;
-
 namespace Unfold.UnfoldGeometry
 {
-    static internal class Angles
+    static public class Angles
     {
         public static double Deg0 => 0;
         public static double Deg30 => (double)30 / (double)180 * Math.PI;

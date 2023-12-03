@@ -1,8 +1,9 @@
 using System.Linq;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
+using Unfold.UnfoldGeometry;
 
-namespace Unfold.UnfoldGeometry
+namespace Unfold.UnfoldWPF
 {
     public class StructureMesh
     {
