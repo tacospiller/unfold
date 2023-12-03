@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Numerics;
+using UnfoldGeometry.Serialization;
 
 namespace Unfold.UnfoldGeometry
 {
@@ -10,6 +11,20 @@ namespace Unfold.UnfoldGeometry
         public RotatingStructure(IAxis axis)
         {
             Axis = axis;
+        }
+
+        public static class AxisDescriptors
+        {
+            public static AxisDescriptor BaseAxis = new AxisDescriptor("RotatingStructure.BaseAxis");
+        }
+
+        public virtual IAxis? GetAxis(AxisDescriptor axis)
+        {
+            if (axis == AxisDescriptors.BaseAxis)
+            {
+                return Axis;
+            }
+            return null;
         }
 
         public Vector3[] CalculateFaces()

@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using UnfoldGeometry.Serialization;
 
 namespace Unfold.UnfoldGeometry
 {
@@ -29,9 +30,23 @@ namespace Unfold.UnfoldGeometry
         public Vector3 E => B + new Vector3(0, (float)-Height, 0);
         public Vector3 F => C + new Vector3(0, (float)-Height, 0);
 
+        public new static class AxisDescriptors
+        {
+            public static AxisDescriptor AOuter = new AxisDescriptor("SymmetricParalellogram.AOuter");
+            public static AxisDescriptor BOuter => new AxisDescriptor("SymmetricParalellogram.BOuter");
+        }
+        public override IAxis? GetAxis(AxisDescriptor desc)
+        {
+            switch (desc)
+            {
+                case var d when d == AxisDescriptors.AOuter: return AOuterAxis;
+                case var d when d == AxisDescriptors.BOuter: return BOuterAxis;
+                default: return base.GetAxis(desc);
+            }
+        }
 
-        public IAxis AOuterFold => new DynamicAxis(() => Matrix4x4.CreateTranslation((float)DistFromAxis, 0, 0) * Axis.Transform, () =>  UnfoldMath.GetAngle(D, F - D) );
-        public IAxis BOuterFold => new DynamicAxis(() => Matrix4x4.CreateTranslation((float)DistFromAxis, 0, 0) * Matrix4x4.CreateRotationZ((float)Axis.Angle) * Axis.Transform, () => UnfoldMath.GetAngle(F, F - E));
+        public IAxis AOuterAxis => new DynamicAxis(() => Matrix4x4.CreateTranslation((float)DistFromAxis, 0, 0) * Axis.Transform, () =>  UnfoldMath.GetAngle(D, F - D) );
+        public IAxis BOuterAxis => new DynamicAxis(() => Matrix4x4.CreateTranslation((float)DistFromAxis, 0, 0) * Matrix4x4.CreateRotationZ((float)Axis.Angle) * Axis.Transform, () => UnfoldMath.GetAngle(F, F - E));
 
         protected override Vector3[] CalculateUntransformedFaces()
         {

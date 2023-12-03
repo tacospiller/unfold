@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Numerics;
+using UnfoldGeometry.Serialization;
 
 namespace Unfold.UnfoldGeometry
 {
@@ -14,6 +15,11 @@ namespace Unfold.UnfoldGeometry
         public Vector3[] CalculateFaces()
         {
             return _faces.Select(x => Vector3.Transform(x, _parent.Transform)).ToArray();
+        }
+
+        public IAxis? GetAxis(AxisDescriptor desc)
+        {
+            return null;
         }
 
         public FaceStructure(IFace face)

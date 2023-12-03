@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Numerics;
+using UnfoldGeometry.Serialization;
 
 namespace Unfold.UnfoldGeometry
 {
@@ -24,6 +25,21 @@ namespace Unfold.UnfoldGeometry
         protected override Vector3[] CalculateUntransformedFaces()
         {
             return new Vector3[] { B, A, D, C, B, D };
+        }
+
+        public new static class AxisDescriptors
+        {
+            public static AxisDescriptor AOuter = new AxisDescriptor("SymmetricVFold.AOuter");
+            public static AxisDescriptor COuter => new AxisDescriptor("SymmetricVFold.COuter");
+        }
+        public override IAxis? GetAxis(AxisDescriptor desc)
+        {
+            switch(desc)
+            {
+                case var d when d == AxisDescriptors.AOuter: return AOuterAxis;
+                case var d when d == AxisDescriptors.COuter: return COuterAxis;
+                default: return base.GetAxis(desc);
+            }
         }
 
         public IAxis AOuterAxis

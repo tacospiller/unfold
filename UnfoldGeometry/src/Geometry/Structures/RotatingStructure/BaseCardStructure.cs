@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Numerics;
+using UnfoldGeometry.Serialization;
 
 namespace Unfold.UnfoldGeometry
 {
@@ -24,6 +25,5 @@ namespace Unfold.UnfoldGeometry
         }
 
         public BaseCardStructure(IAxis axis) : base(axis) { }
-
     }
 }

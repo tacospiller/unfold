@@ -54,7 +54,7 @@ namespace Unfold.Pages
             var par = new SymmetricParallelStructure(vfold.AOuterAxis.OffsetY(0.5)) { DistFromAxis = 0.3, Width = 0.3, Height = 0.4 };
             var vfold2 = new SymmetricVFoldStructure(vfold.COuterAxis.OffsetY(0.3)) { Theta = Angles.Deg30, Psi = Angles.Deg60, DistA = 0.5, DistD = 0.5 };
             var vfold3 = new SymmetricVFoldStructure(vfold2.COuterAxis.OffsetY(0.1)) { Theta = Angles.Deg30, Psi = Angles.Deg30, DistA = 0.3, DistD = 0.3 };
-            var vfold4 = new SymmetricVFoldStructure(par.AOuterFold) { Theta = Angles.Deg45, Psi = Angles.Deg45, DistA = 0.4, DistD = 0.4 };
+            var vfold4 = new SymmetricVFoldStructure(par.AOuterAxis) { Theta = Angles.Deg45, Psi = Angles.Deg45, DistA = 0.4, DistD = 0.4 };
             var face = new FaceStructure(vfold4.FaceCBD.Offset(0.1, 0, 0.001)) { Width = 0.3, Height = 0.3 };
 
             var baseCardModel = new StructureMesh(baseCard, Colors.DeepPink, Colors.DeepSkyBlue);
