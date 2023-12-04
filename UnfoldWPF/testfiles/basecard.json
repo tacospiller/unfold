@@ -1,0 +1,13 @@
+{
+    "ChildrenList": [
+        {
+            "$type": "BaseCard",
+            "Id": { "Id": "basecard" },
+            "Width": 140,
+            "Height": 210,
+            "Axis": {
+                "Type": "Manual"
+            }
+        }
+    ]
+}
