@@ -1,7 +1,4 @@
-﻿using System.IO;
-using System.Text.Json;
-using System.Windows.Controls;
-using UnfoldGeometry.Serialization;
+﻿using System.Windows.Controls;
 using UnfoldWPF.Objects;
 using UnfoldWPF.src.Objects;
 

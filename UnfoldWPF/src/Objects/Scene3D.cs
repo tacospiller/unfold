@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using System.Diagnostics;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
 using Unfold.UnfoldGeometry;
@@ -31,7 +32,10 @@ namespace UnfoldWPF.Objects
 
         public void LoadComponents(StructureMeshCollection coll)
         {
-            coll?.Children.ForEach(x => Group.Children.Remove(x.Model3D));
+            Collection?.Children.ForEach(x =>
+            {
+                Group.Children.Remove(x.Model3D);
+            });
             Collection = coll;
             coll?.Children.ForEach(x => Group.Children.Add(x.Model3D));
             var (center, range) = coll.GetCenterAndRange();

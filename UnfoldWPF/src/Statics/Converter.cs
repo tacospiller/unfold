@@ -27,7 +27,7 @@ namespace Unfold.UnfoldWPF
     {
         public static Color RandomColor()
         {
-            return Color.FromScRgb(1.0f, Random.Shared.NextSingle(), Random.Shared.NextSingle(), Random.Shared.NextSingle());
+            return Color.FromScRgb(1.0f, Random.Shared.NextSingle() * 0.5f + 0.5f, Random.Shared.NextSingle() * 0.5f + 0.5f, Random.Shared.NextSingle() * 0.5f + 0.5f);
         }
     }
 }
