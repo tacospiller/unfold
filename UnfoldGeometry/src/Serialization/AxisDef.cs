@@ -17,14 +17,14 @@ namespace UnfoldGeometry.Serialization
         {
             public StructureId ParentStructureId { get; }
             public AxisDescriptor AxisDescriptor { get; }
-            public Vector3 Offset { get; }
+            public double OffsetY { get; }
 
             [JsonConstructor]
-            public DependantAxisProperties(StructureId parentStructureId, AxisDescriptor axisDescriptor, Vector3 offset)
+            public DependantAxisProperties(StructureId parentStructureId, AxisDescriptor axisDescriptor, double offsetY)
             {
                 ParentStructureId = parentStructureId;
                 AxisDescriptor = axisDescriptor;
-                Offset = offset;
+                OffsetY = offsetY;
             }
         }
 
@@ -55,9 +55,9 @@ namespace UnfoldGeometry.Serialization
                     return null;
                 }
                 var axis = obj.GetStructure(coll)?.GetAxis(DependantProperties.AxisDescriptor);
-                if (DependantProperties.Offset != Vector3.Zero)
+                if (DependantProperties.OffsetY != 0)
                 {
-                    return axis?.OffsetY(DependantProperties.Offset.Y);
+                    return axis?.OffsetY(DependantProperties.OffsetY);
                 }
                 return axis;
             }

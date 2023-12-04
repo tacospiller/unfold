@@ -8,8 +8,8 @@ namespace Unfold.UnfoldGeometry
         // B is the origin point. segment AB and CB are attached to base. D is a free floating(calculated) point. 
         // Triangle ABD and CBD are moving faces of the v-fold.
         private readonly SymmetricVFoldDef _def;
-        public double Theta => _def.Theta;
-        public double Psi => _def.Psi;
+        public double Theta => UnfoldMath.DegToRad(_def.Theta);
+        public double Psi => UnfoldMath.DegToRad(_def.Psi);
         public double DistA => _def.DistA;
         public double DistD => _def.DistD;
         public double AngleAYC => Axis.Angle;

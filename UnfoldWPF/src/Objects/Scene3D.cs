@@ -31,6 +31,7 @@ namespace UnfoldWPF.Objects
 
         public void LoadComponents(StructureMeshCollection coll)
         {
+            coll?.Children.ForEach(x => Group.Children.Remove(x.Model3D));
             Collection = coll;
             coll?.Children.ForEach(x => Group.Children.Add(x.Model3D));
             var (center, range) = coll.GetCenterAndRange();

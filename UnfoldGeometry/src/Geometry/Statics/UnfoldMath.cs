@@ -4,13 +4,17 @@ namespace Unfold.UnfoldGeometry
 {
     public static class UnfoldMath
     {
-        static public double EqualThreshold = 1e-6;
+        static public double EqualThreshold = 1e-3;
 
         public class MathException : Exception
         {
             public MathException(string err) : base(err) { }
         }
 
+        static public double DegToRad(double d)
+        {
+            return d / 180 * Math.PI;
+        }
         static public Vector3 Trilaterate(Vector3 p1, Vector3 p2, Vector3 p3, double r1, double r2, double r3, bool convex = true)
         {
             if (!IsTriangle(p1, p2, p3))
@@ -21,9 +25,9 @@ namespace Unfold.UnfoldGeometry
                 }
                 if (p1 == p2)
                 {
-                    return Bilaterate(p1, p3, r1, r3);
+                    return Bilaterate(p1, p3, r1, r3, !convex);
                 }
-                return Bilaterate(p1, p2, r1, r2);
+                return Bilaterate(p1, p2, r1, r2, !convex);
             }
 
             // 1.First rotate points to lie on xy plane
@@ -64,7 +68,7 @@ namespace Unfold.UnfoldGeometry
             return qa;
         }
 
-        static public Vector3 Bilaterate(Vector3 p1, Vector3 p2, double r1, double r2)
+        static public Vector3 Bilaterate(Vector3 p1, Vector3 p2, double r1, double r2, bool convex)
         {
             var mat1 = GetTranslationMatrix(p1, Vector3.Zero);
             var p2a = Vector3.Transform(p2, mat1);
@@ -72,7 +76,7 @@ namespace Unfold.UnfoldGeometry
             var p2b = Vector3.Transform(p2a, mat2);
 
             var x = ((r1 * r1) - (r2 * r2) + (p2b.X * p2b.X)) / (2 * p2b.X);
-            var y = Math.Sqrt((r1 * r1) - (x * x));
+            var y = Math.Sqrt((r1 * r1) - (x * x)) * (convex ? 1 : -1);
 
             var p = new Vector3((float)x, (float)y, 0);
             Matrix4x4.Invert(Matrix4x4.Multiply(mat1, mat2), out var mati);

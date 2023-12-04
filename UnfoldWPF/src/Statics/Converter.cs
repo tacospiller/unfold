@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Windows.Media;
 using System.Windows.Media.Media3D;
 
 namespace Unfold.UnfoldWPF
@@ -18,6 +20,14 @@ namespace Unfold.UnfoldWPF
             {
                 Positions = new Point3DCollection(vectors.Select(x => x.ToPoint3D()))
             };
+        }
+    }
+
+    public static class DisplayHelper
+    {
+        public static Color RandomColor()
+        {
+            return Color.FromScRgb(1.0f, Random.Shared.NextSingle(), Random.Shared.NextSingle(), Random.Shared.NextSingle());
         }
     }
 }

@@ -8,6 +8,22 @@
             "Axis": {
                 "Type": "Manual"
             }
+        },
+        {
+            "$type": "SymmetricVFold",
+            "Id": { "Id": "vfold1" },
+            "Axis": {
+                "Type": "Dependant",
+                "DependantProperties": {
+                    "ParentStructureId": { "Id": "basecard" },
+                    "AxisDescriptor": { "Id": "RotatingStructure.BaseAxis" },
+                    "OffsetY": 60
+                }
+            },
+            "DistA": 100,
+            "DistD": 100,
+            "Theta": 30,
+            "Psi": 60
         }
     ]
 }

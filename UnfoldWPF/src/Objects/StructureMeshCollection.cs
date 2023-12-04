@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
+using Unfold.UnfoldWPF;
 using UnfoldGeometry.Serialization;
 
 namespace UnfoldWPF.Objects
@@ -20,7 +21,7 @@ namespace UnfoldWPF.Objects
         public static StructureMeshCollection CreateFromDefs(StructureDefCollection coll)
         {
             var meshes = new StructureMeshCollection();
-            meshes.Children.AddRange(coll.ChildrenList.Select(x => new StructureMesh(x.GetStructure(coll), Colors.FloralWhite, Colors.DimGray)));
+            meshes.Children.AddRange(coll.ChildrenList.Select(x => new StructureMesh(x.GetStructure(coll), DisplayHelper.RandomColor(), DisplayHelper.RandomColor())));
             return meshes;
         }
 

@@ -22,6 +22,7 @@ namespace UnfoldWPF.Windows
 
         private void AddSliders()
         {
+            Sliders.Children.Clear();
             var manualAxes = ActiveFile.Static.FileContent?.GetManualAxes();
             if (manualAxes != null)
             {
@@ -38,6 +39,7 @@ namespace UnfoldWPF.Windows
                         TickPlacement = System.Windows.Controls.Primitives.TickPlacement.BottomRight,
                         TickFrequency = 10,
                         AutoToolTipPlacement = System.Windows.Controls.Primitives.AutoToolTipPlacement.BottomRight,
+                        Margin = new Thickness(10)
                     };
                     slider.ValueChanged += (object sender, RoutedPropertyChangedEventArgs<double> e) =>
                     {

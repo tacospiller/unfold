@@ -23,7 +23,8 @@
                 <MenuItem Command="ApplicationCommands.SaveAs"></MenuItem>
             </MenuItem>
         </Menu>
-        <StackPanel x:Name="Sliders" DockPanel.Dock="Right" Width="200"/>
+        <StackPanel x:Name="Sliders" DockPanel.Dock="Right" Width="200" Background="WhiteSmoke" />
+        <Rectangle VerticalAlignment="Stretch" Width="1" Fill="LightGray" DockPanel.Dock="Right" />
         <controls:Preview3D />
     </DockPanel>
 </Window>
