@@ -1,13 +1,13 @@
-﻿using System;
-using System.Numerics;
+﻿using System.Numerics;
 using UnfoldGeometry.Serialization;
 
 namespace Unfold.UnfoldGeometry
 {
     public class BaseCardStructure : RotatingStructure
     {
-        public double Width { get; init; } = 1;
-        public double Height { get; init; } = 1.2;
+        private readonly BaseCardDef _def;
+        public double Width => _def.Width;
+        public double Height => _def.Height;
 
         public Vector3 A => new Vector3((float)Width, 0, 0);
         public Vector3 B => new Vector3((float)(Width * Math.Cos(Axis.Angle)), 0, (float)(Width * Math.Sin(Axis.Angle)));
@@ -24,6 +24,9 @@ namespace Unfold.UnfoldGeometry
             };
         }
 
-        public BaseCardStructure(IAxis axis) : base(axis) { }
+        public BaseCardStructure(IStructureDefCollection coll, BaseCardDef def) : base(def.Axis.ToAxis(coll) ?? new ManualAxis())
+        {
+            _def = def;
+        }
     }
 }

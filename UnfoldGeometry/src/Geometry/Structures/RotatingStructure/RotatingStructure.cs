@@ -1,12 +1,11 @@
-﻿using System.Linq;
-using System.Numerics;
+﻿using System.Numerics;
 using UnfoldGeometry.Serialization;
 
 namespace Unfold.UnfoldGeometry
 {
     public abstract class RotatingStructure : IStructure
     {
-        protected virtual IAxis Axis { get; }
+        public virtual IAxis Axis { get; }
 
         public RotatingStructure(IAxis axis)
         {

@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Numerics;
+﻿using System.Numerics;
 using UnfoldGeometry.Serialization;
 
 namespace Unfold.UnfoldGeometry

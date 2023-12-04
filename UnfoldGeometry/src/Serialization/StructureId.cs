@@ -2,10 +2,10 @@
 
 namespace UnfoldGeometry.Serialization
 {
-    public record struct AxisDescriptor
+    public record struct StructureId
     {
         public string Id { get; }
         [JsonConstructor]
-        public AxisDescriptor(string id) { Id = id; }
+        public StructureId(string id) { Id = id; }
     }
 }

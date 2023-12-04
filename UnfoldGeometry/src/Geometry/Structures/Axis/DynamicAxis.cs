@@ -1,6 +1,4 @@
-﻿using System;
-using System.Numerics;
-using UnfoldGeometry.Serialization;
+﻿using System.Numerics;
 
 namespace Unfold.UnfoldGeometry
 {

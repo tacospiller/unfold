@@ -1,7 +1,10 @@
+using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
 using Unfold.UnfoldGeometry;
+using UnfoldGeometry.Serialization;
 
 namespace Unfold.UnfoldWPF
 {
@@ -29,6 +32,19 @@ namespace Unfold.UnfoldWPF
         public void Recalculate()
         {
             _mesh.Positions = new Point3DCollection(Structure.CalculateFaces().Select(x => x.ToPoint3D()));
+        }
+    }
+
+    public class StructureMeshCollection
+    {
+        public List<StructureMesh> Children { get; } = new List<StructureMesh>();
+
+        public static StructureMeshCollection CreateFromJson(string json)
+        {
+            var coll = JsonSerializer.Deserialize<StructureDefCollection>(json);
+            var meshes = new StructureMeshCollection();
+            meshes.Children.AddRange(coll.ChildrenList.Select(x => new StructureMesh(x.GetStructure(coll), Colors.FloralWhite, Colors.DimGray)));
+            return meshes;
         }
     }
 }

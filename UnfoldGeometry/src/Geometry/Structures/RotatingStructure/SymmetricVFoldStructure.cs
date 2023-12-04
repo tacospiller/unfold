@@ -1,5 +1,4 @@
-﻿using System;
-using System.Numerics;
+﻿using System.Numerics;
 using UnfoldGeometry.Serialization;
 
 namespace Unfold.UnfoldGeometry
@@ -8,10 +7,11 @@ namespace Unfold.UnfoldGeometry
     {
         // B is the origin point. segment AB and CB are attached to base. D is a free floating(calculated) point. 
         // Triangle ABD and CBD are moving faces of the v-fold.
-        public double Theta { get; init; } = Angles.Deg60;
-        public double Psi { get; init; } = Angles.Deg90;
-        public double DistA { get; init; } = 1;
-        public double DistD { get; init; } = 1;
+        private readonly SymmetricVFoldDef _def;
+        public double Theta => _def.Theta;
+        public double Psi => _def.Psi;
+        public double DistA => _def.DistA;
+        public double DistD => _def.DistD;
         public double AngleAYC => Axis.Angle;
 
         public Vector3 A => new Vector3((float)(DistA * Math.Sin(Theta)), (float)(DistA * Math.Cos(Theta)), 0);
@@ -34,7 +34,7 @@ namespace Unfold.UnfoldGeometry
         }
         public override IAxis? GetAxis(AxisDescriptor desc)
         {
-            switch(desc)
+            switch (desc)
             {
                 case var d when d == AxisDescriptors.AOuter: return AOuterAxis;
                 case var d when d == AxisDescriptors.COuter: return COuterAxis;
@@ -97,8 +97,9 @@ namespace Unfold.UnfoldGeometry
             }
         }
 
-        public SymmetricVFoldStructure(IAxis axis) : base(axis)
+        public SymmetricVFoldStructure(IStructureDefCollection coll, SymmetricVFoldDef def) : base(def.Axis.ToAxis(coll) ?? new ManualAxis())
         {
+            _def = def;
         }
     }
 }

@@ -1,38 +1,65 @@
-﻿using Unfold.UnfoldGeometry;
+﻿using System.Numerics;
+using System.Text.Json.Serialization;
+using Unfold.UnfoldGeometry;
 
 namespace UnfoldGeometry.Serialization
 {
-    public class AxisDef
+    public record class AxisDef
     {
-        public StructureDefKey? ParentStructure { get; set; }
-        public AxisDescriptor? ParentAxisDescriptor { get; set; }
-        public bool Manual { get; set; }
-        public double ManualInitialAngle { get; set; } = 0;
-        public double OffsetY { get; set; } = 0;
-        public AxisDef()
-        { }
-
-        public IAxis ToAxis(IStructureDefCollection coll)
+        [JsonConverter(typeof(JsonStringEnumConverter<AxisTypes>))]
+        public enum AxisTypes
         {
-            if (Manual)
+            Manual,
+            Dependant
+        }
+
+        public record class DependantAxisProperties
+        {
+            public StructureId ParentStructureId { get; }
+            public AxisDescriptor AxisDescriptor { get; }
+            public Vector3 Offset { get; }
+
+            [JsonConstructor]
+            public DependantAxisProperties(StructureId parentStructureId, AxisDescriptor axisDescriptor, Vector3 offset)
             {
-                return new ManualAxis(ManualInitialAngle);
-            } else if (ParentStructure != null && ParentAxisDescriptor != null)
+                ParentStructureId = parentStructureId;
+                AxisDescriptor = axisDescriptor;
+                Offset = offset;
+            }
+        }
+
+        public AxisTypes Type { get; }
+        public DependantAxisProperties? DependantProperties { get; }
+
+        public AxisDef(AxisTypes type, DependantAxisProperties? dependantProperties)
+        {
+            Type = type;
+            DependantProperties = dependantProperties;
+        }
+
+        public IAxis? ToAxis(IStructureDefCollection coll)
+        {
+            if (Type == AxisTypes.Manual)
             {
-                var strct = coll.Children.GetValueOrDefault((StructureDefKey)ParentStructure);
-                if (strct == null)
+                return new ManualAxis();
+            }
+            else if (DependantProperties == null)
+            {
+                return null;
+            }
+            else
+            {
+                var obj = coll.Children.GetValueOrDefault(DependantProperties.ParentStructureId);
+                if (obj == null)
                 {
-                    throw new SerializationException("invalid axisdef");
+                    return null;
                 }
-                var axis = strct.GetStructure(coll).GetAxis((AxisDescriptor)ParentAxisDescriptor);
-                if (axis == null)
+                var axis = obj.GetStructure(coll)?.GetAxis(DependantProperties.AxisDescriptor);
+                if (DependantProperties.Offset != Vector3.Zero)
                 {
-                    throw new SerializationException("invalid axisdef");
+                    return axis?.OffsetY(DependantProperties.Offset.Y);
                 }
-                return OffsetY == 0 ? axis : axis.OffsetY(OffsetY);
-            } else
-            {
-                throw new SerializationException("invalid axisdef");
+                return axis;
             }
         }
     }

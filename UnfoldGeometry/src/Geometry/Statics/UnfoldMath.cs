@@ -117,7 +117,7 @@ namespace Unfold.UnfoldGeometry
             var angle = Math.Acos(Vector3.Dot(nfrom, nto));
 
             var mat = Matrix4x4.CreateFromAxisAngle(axis, (float)angle);
-            
+
             return mat;
         }
 

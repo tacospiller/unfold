@@ -2,6 +2,6 @@
 {
     public interface IStructureDefCollection
     {
-        public IReadOnlyDictionary<StructureDefKey, IStructureDef> Children { get; }
+        public IReadOnlyDictionary<StructureId, IStructureDef> Children { get; }
     }
 }

@@ -6,10 +6,10 @@ namespace Unfold.UnfoldGeometry
     public class SymmetricParallelStructure : RotatingStructure
     {
         // segment AD and BE are attached to base. C and F are free floating point.
-
-        public double Width { get; init; } = 0.8;
-        public double Height { get; init; } = 1;
-        public double DistFromAxis { get; init; } = 1;
+        private readonly SymmetricParallelogramDef _def;
+        public double Width => _def.Width;
+        public double Height => _def.Height;
+        public double DistFromAxis => _def.DistFromAxis;
 
         public Vector3 A => new Vector3((float)DistFromAxis, (float)Height, 0);
         public Vector3 B => new Vector3((float)(DistFromAxis * Math.Cos(Axis.Angle)), (float)Height, (float)(DistFromAxis * Math.Sin(Axis.Angle)));
@@ -35,6 +35,7 @@ namespace Unfold.UnfoldGeometry
             public static AxisDescriptor AOuter = new AxisDescriptor("SymmetricParalellogram.AOuter");
             public static AxisDescriptor BOuter => new AxisDescriptor("SymmetricParalellogram.BOuter");
         }
+
         public override IAxis? GetAxis(AxisDescriptor desc)
         {
             switch (desc)
@@ -45,7 +46,7 @@ namespace Unfold.UnfoldGeometry
             }
         }
 
-        public IAxis AOuterAxis => new DynamicAxis(() => Matrix4x4.CreateTranslation((float)DistFromAxis, 0, 0) * Axis.Transform, () =>  UnfoldMath.GetAngle(D, F - D) );
+        public IAxis AOuterAxis => new DynamicAxis(() => Matrix4x4.CreateTranslation((float)DistFromAxis, 0, 0) * Axis.Transform, () => UnfoldMath.GetAngle(D, F - D));
         public IAxis BOuterAxis => new DynamicAxis(() => Matrix4x4.CreateTranslation((float)DistFromAxis, 0, 0) * Matrix4x4.CreateRotationZ((float)Axis.Angle) * Axis.Transform, () => UnfoldMath.GetAngle(F, F - E));
 
         protected override Vector3[] CalculateUntransformedFaces()
@@ -53,6 +54,9 @@ namespace Unfold.UnfoldGeometry
             return new Vector3[] { A, C, F, A, F, D, C, B, E, C, E, F };
         }
 
-        public SymmetricParallelStructure(IAxis axis) : base(axis) { }
+        public SymmetricParallelStructure(IStructureDefCollection coll, SymmetricParallelogramDef def) : base(def.Axis.ToAxis(coll) ?? new ManualAxis())
+        {
+            _def = def;
+        }
     }
 }
