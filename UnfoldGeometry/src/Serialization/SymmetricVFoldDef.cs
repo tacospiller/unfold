@@ -12,16 +12,6 @@ namespace UnfoldGeometry.Serialization
         public double Theta { get; set; }
         public double Psi { get; set; }
 
-        [JsonConstructor]
-        public SymmetricVFoldDef(StructureId id, AxisDef axis, double distA, double distD, double theta, double psi)
-        {
-            Id = id;
-            Axis = axis;
-            DistA = distA;
-            DistD = distD;
-            Theta = theta;
-            Psi = psi;
-        }
 
         private IStructure? _structure;
         public IStructure GetStructure(IStructureDefCollection coll)

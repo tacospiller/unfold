@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:UnfoldWPF.Windows"
         xmlns:controls="clr-namespace:UnfoldWPF.UserControls"
+        xmlns:geometry="clr-namespace:UnfoldGeometry.Serialization;assembly=UnfoldGeometry"
         mc:Ignorable="d"
         WindowStyle="SingleBorderWindow"
         Title="Unfold" Height="450" Width="800">
@@ -14,6 +15,39 @@
         <CommandBinding Command="ApplicationCommands.Open" Executed="Open_Executed" />
         <CommandBinding Command="ApplicationCommands.New" Executed="New_Executed" />
     </Window.CommandBindings>
+    <Window.Resources>
+        <Style x:Key="FieldName" TargetType="TextBlock">
+            <Setter Property="FontWeight" Value="bold"/>
+        </Style>
+        <DataTemplate DataType="{x:Type geometry:BaseCardDef}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Column ="0" Grid.Row="0" Text="Id" Style="{StaticResource FieldName}" Margin="0 0 5 0" />
+                <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding Path=Id.Id}" />
+                <TextBlock Grid.Column ="0" Grid.Row="1" Text="Height" Style="{StaticResource FieldName}" Margin="0 0 5 0" />
+                <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding Path=Height, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextChanged="TextBox_TextChanged" />
+                <TextBlock Grid.Column ="0" Grid.Row="2" Text="Width" Style="{StaticResource FieldName}" Margin="0 0 5 0" />
+                <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding Path=Width, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextChanged="TextBox_TextChanged" />
+            </Grid>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type geometry:SymmetricVFoldDef}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="50" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="{Binding Path=Id.Id}" />
+            </Grid>
+        </DataTemplate>
+    </Window.Resources>
     <DockPanel LastChildFill="True">
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_File">
@@ -23,7 +57,8 @@
                 <MenuItem Command="ApplicationCommands.SaveAs"></MenuItem>
             </MenuItem>
         </Menu>
-        <StackPanel x:Name="Sliders" DockPanel.Dock="Right" Width="200" Background="WhiteSmoke" />
+        <ListBox x:Name="Structures" DockPanel.Dock="Right" Width="200" Background="WhiteSmoke" SelectionMode="Single">
+        </ListBox>
         <Rectangle VerticalAlignment="Stretch" Width="1" Fill="LightGray" DockPanel.Dock="Right" />
         <controls:Preview3D />
     </DockPanel>

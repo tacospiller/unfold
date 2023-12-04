@@ -15,27 +15,14 @@ namespace UnfoldGeometry.Serialization
 
         public record class DependantAxisProperties
         {
-            public StructureId ParentStructureId { get; }
-            public AxisDescriptor AxisDescriptor { get; }
-            public double OffsetY { get; }
-
-            [JsonConstructor]
-            public DependantAxisProperties(StructureId parentStructureId, AxisDescriptor axisDescriptor, double offsetY)
-            {
-                ParentStructureId = parentStructureId;
-                AxisDescriptor = axisDescriptor;
-                OffsetY = offsetY;
-            }
+            public StructureId ParentStructureId { get; set; }
+            public AxisDescriptor AxisDescriptor { get; set; }
+            public double OffsetY { get; set; }
         }
 
-        public AxisTypes Type { get; }
-        public DependantAxisProperties? DependantProperties { get; }
+        public AxisTypes Type { get; set; }
+        public DependantAxisProperties? DependantProperties { get; set; }
 
-        public AxisDef(AxisTypes type, DependantAxisProperties? dependantProperties)
-        {
-            Type = type;
-            DependantProperties = dependantProperties;
-        }
 
         public IAxis? ToAxis(IStructureDefCollection coll)
         {
@@ -49,7 +36,7 @@ namespace UnfoldGeometry.Serialization
             }
             else
             {
-                var obj = coll.Children.GetValueOrDefault(DependantProperties.ParentStructureId);
+                var obj = coll.GetChild(DependantProperties.ParentStructureId);
                 if (obj == null)
                 {
                     return null;

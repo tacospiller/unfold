@@ -5,14 +5,11 @@ namespace UnfoldGeometry.Serialization
 {
     public class StructureDefCollection : IStructureDefCollection
     {
-        [JsonIgnore]
-        public IReadOnlyDictionary<StructureId, IStructureDef> Children { get; }
-        public IEnumerable<IStructureDef> ChildrenList => Children.Values;
+        public List<IStructureDef> ChildrenList { get; set; }
 
-        [JsonConstructor]
-        public StructureDefCollection(IEnumerable<IStructureDef> childrenList)
+        public IStructureDef? GetChild(StructureId id)
         {
-            Children = childrenList.ToDictionary(x => x.Id);
+            return ChildrenList.FirstOrDefault(x => x.Id == id);
         }
 
         public IEnumerable<ManualAxis> GetManualAxes()

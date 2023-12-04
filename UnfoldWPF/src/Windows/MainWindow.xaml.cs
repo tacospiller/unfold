@@ -13,43 +13,21 @@ namespace UnfoldWPF.Windows
         public MainWindow()
         {
             InitializeComponent();
-            AddSliders();
+            AddStructures();
             ActiveFile.Static.FileLoaded += (object? sender, ActiveFileLoadedArguments e) =>
             {
-                AddSliders();
+                AddStructures();
             };
         }
 
-        private void AddSliders()
+        private void AddStructures()
         {
-            Sliders.Children.Clear();
-            var manualAxes = ActiveFile.Static.FileContent?.GetManualAxes();
-            if (manualAxes != null)
+            var children = ActiveFile.Static.FileContent?.ChildrenList;
+            if (children == null)
             {
-                foreach (var axis in manualAxes)
-                {
-                    var slider = new Slider
-                    {
-                        Maximum = 180,
-                        Orientation = Orientation.Horizontal,
-                        Value = 0,
-                        Minimum = 0,
-                        SmallChange = 10,
-                        LargeChange = 30,
-                        TickPlacement = System.Windows.Controls.Primitives.TickPlacement.BottomRight,
-                        TickFrequency = 10,
-                        AutoToolTipPlacement = System.Windows.Controls.Primitives.AutoToolTipPlacement.BottomRight,
-                        Margin = new Thickness(10)
-                    };
-                    slider.ValueChanged += (object sender, RoutedPropertyChangedEventArgs<double> e) =>
-                    {
-                        axis.SetAngle(e.NewValue / 180 * Math.PI);
-                        ActiveFile.Static.InvokeStructureUpdated();
-                    };
-                    Sliders.Children.Add(slider);
-                }
+                return;
             }
-
+            Structures.ItemsSource = children;
         }
 
         private void Save_Executed(object sender, ExecutedRoutedEventArgs e)
@@ -76,6 +54,11 @@ namespace UnfoldWPF.Windows
             {
                 ActiveFile.Static.Load(dialog.FileName);
             }
+        }
+
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            ActiveFile.Static.InvokeStructureUpdated();
         }
     }
 }

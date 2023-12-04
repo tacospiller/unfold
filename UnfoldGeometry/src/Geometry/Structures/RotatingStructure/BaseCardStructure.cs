@@ -5,9 +5,9 @@ namespace Unfold.UnfoldGeometry
 {
     public class BaseCardStructure : RotatingStructure
     {
-        private readonly BaseCardDef _def;
+        public readonly BaseCardDef _def;
         public double Width => _def.Width;
-        public double Height => _def.Height;
+        public double Height { get => _def.Height; }
 
         public Vector3 A => new Vector3((float)Width, 0, 0);
         public Vector3 B => new Vector3((float)(Width * Math.Cos(Axis.Angle)), 0, (float)(Width * Math.Sin(Axis.Angle)));

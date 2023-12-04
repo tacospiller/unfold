@@ -1,4 +1,8 @@
-﻿using System.Windows.Controls;
+﻿using System.Diagnostics;
+using System.Linq;
+using System.Windows.Controls;
+using Unfold.UnfoldGeometry;
+using UnfoldGeometry.Serialization;
 using UnfoldWPF.Objects;
 using UnfoldWPF.src.Objects;
 

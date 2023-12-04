@@ -10,14 +10,6 @@ namespace UnfoldGeometry.Serialization
         public double Height { get; set; }
         public double Width { get; set; }
 
-        public SymmetricParallelogramDef(StructureId id, AxisDef axis, double distFromAxis, double height, double width)
-        {
-            Id = id;
-            Axis = axis;
-            DistFromAxis = distFromAxis;
-            Height = height;
-            Width = width;
-        }
 
         private IStructure? _structure;
         public IStructure GetStructure(IStructureDefCollection coll)

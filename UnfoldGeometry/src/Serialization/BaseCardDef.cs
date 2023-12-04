@@ -5,19 +5,11 @@ namespace UnfoldGeometry.Serialization
 {
     public record class BaseCardDef : IStructureDef
     {
-        public StructureId Id { get; }
-        public double Width { get; }
-        public double Height { get; }
-        public AxisDef Axis { get; }
+        public StructureId Id { get; set; }
+        public double Width { get; set; }
+        public double Height { get; set; }
+        public AxisDef Axis { get; set; }
 
-        [JsonConstructor]
-        public BaseCardDef(StructureId id, double width, double height, AxisDef axis)
-        {
-            Id = id;
-            Width = width;
-            Height = height;
-            Axis = axis;
-        }
 
         private IStructure? _structure;
         public IStructure GetStructure(IStructureDefCollection coll)
