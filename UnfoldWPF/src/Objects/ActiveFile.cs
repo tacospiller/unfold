@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
-using UnfoldGeometry.Serialization;
+using Unfold.Serialization;
+using Unfold.UnfoldGeometry;
 
-namespace UnfoldWPF.src.Objects
+namespace UnfoldWPF.Objects
 {
     public class ActiveFileLoadedArguments
     {
@@ -22,7 +23,9 @@ namespace UnfoldWPF.src.Objects
 
         public string? Path { get; private set; }
         public bool Modified { get; set; }
-        public StructureDefCollection? FileContent { get; private set; }
+        public List<IStructureDef>? FileContent { get; private set; }
+        public StructureMeshCollection Collection { get; } = new StructureMeshCollection();
+
         public event EventHandler<ActiveFileLoadedArguments> FileLoaded = delegate { };
         public event EventHandler<StructureUpdatedArguments> StructureUpdated = delegate { };
 
@@ -31,8 +34,9 @@ namespace UnfoldWPF.src.Objects
             Path = path;
             var fileName = Path;
             var filestream = File.OpenRead(fileName);
-            var content = JsonSerializer.Deserialize<StructureDefCollection>(filestream);
+            var content = JsonSerializer.Deserialize<List<IStructureDef>>(filestream);
             FileContent = content;
+            Collection.ReloadFromDefs(FileContent);
             FileLoaded(this, new ActiveFileLoadedArguments());
         }
 

@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 using Unfold.UnfoldGeometry;
 
-namespace UnfoldGeometry.Serialization
+namespace Unfold.Serialization
 {
     public record class SymmetricVFoldDef : IStructureDef
     {
@@ -12,15 +12,9 @@ namespace UnfoldGeometry.Serialization
         public double Theta { get; set; }
         public double Psi { get; set; }
 
-
-        private IStructure? _structure;
-        public IStructure GetStructure(IStructureDefCollection coll)
+        public IStructure CreateStructure(DefStructurePairCollection coll)
         {
-            if (_structure == null)
-            {
-                _structure = new SymmetricVFoldStructure(coll, this);
-            }
-            return _structure;
+            return new SymmetricVFoldStructure(coll, this);
         }
     }
 }

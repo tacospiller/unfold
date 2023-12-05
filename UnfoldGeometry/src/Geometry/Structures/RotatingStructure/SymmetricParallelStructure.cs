@@ -1,5 +1,5 @@
 ﻿using System.Numerics;
-using UnfoldGeometry.Serialization;
+using Unfold.Serialization;
 
 namespace Unfold.UnfoldGeometry
 {
@@ -54,7 +54,7 @@ namespace Unfold.UnfoldGeometry
             return new Vector3[] { A, C, F, A, F, D, C, B, E, C, E, F };
         }
 
-        public SymmetricParallelStructure(IStructureDefCollection coll, SymmetricParallelogramDef def) : base(def.Axis.ToAxis(coll) ?? new ManualAxis())
+        public SymmetricParallelStructure(DefStructurePairCollection coll, SymmetricParallelogramDef def) : base(def.Axis.ToAxis(coll) ?? new ManualAxis())
         {
             _def = def;
         }

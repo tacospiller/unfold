@@ -1,10 +1,5 @@
-﻿using System.Diagnostics;
-using System.Linq;
-using System.Windows.Controls;
-using Unfold.UnfoldGeometry;
-using UnfoldGeometry.Serialization;
+﻿using System.Windows.Controls;
 using UnfoldWPF.Objects;
-using UnfoldWPF.src.Objects;
 
 namespace UnfoldWPF.UserControls
 {
@@ -33,13 +28,12 @@ namespace UnfoldWPF.UserControls
 
         private void LoadFile()
         {
-            var meshes = StructureMeshCollection.CreateFromDefs(ActiveFile.Static.FileContent);
-            _scene.LoadComponents(meshes);
+            _scene.LoadComponents(ActiveFile.Static.Collection);
         }
 
         private void RedrawComponents()
         {
-            _scene.Collection?.Recalculate();
+            ActiveFile.Static.Collection.Recalculate();
         }
     }
 }

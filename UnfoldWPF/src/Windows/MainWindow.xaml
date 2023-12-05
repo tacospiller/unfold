@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:UnfoldWPF.Windows"
         xmlns:controls="clr-namespace:UnfoldWPF.UserControls"
-        xmlns:geometry="clr-namespace:UnfoldGeometry.Serialization;assembly=UnfoldGeometry"
+        xmlns:geometry="clr-namespace:Unfold.Serialization;assembly=UnfoldGeometry"
         mc:Ignorable="d"
         WindowStyle="SingleBorderWindow"
         Title="Unfold" Height="450" Width="800">
@@ -29,6 +29,7 @@
                     <RowDefinition />
                     <RowDefinition />
                     <RowDefinition />
+                    <RowDefinition />
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Column ="0" Grid.Row="0" Text="Id" Style="{StaticResource FieldName}" Margin="0 0 5 0" />
                 <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding Path=Id.Id}" />
@@ -36,15 +37,36 @@
                 <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding Path=Height, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextChanged="TextBox_TextChanged" />
                 <TextBlock Grid.Column ="0" Grid.Row="2" Text="Width" Style="{StaticResource FieldName}" Margin="0 0 5 0" />
                 <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding Path=Width, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextChanged="TextBox_TextChanged" />
+                <TextBlock Grid.Column ="0" Grid.Row="3" Text="Axis" Style="{StaticResource FieldName}" Margin="0 0 5 0" />
+                <controls:AxisControl Grid.Column ="1" Grid.Row="3" AxisDef="{Binding Path=Axis, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </Grid>
         </DataTemplate>
         <DataTemplate DataType="{x:Type geometry:SymmetricVFoldDef}">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="50" />
+                    <ColumnDefinition Width="auto" />
                     <ColumnDefinition Width="1*" />
                 </Grid.ColumnDefinitions>
-                <TextBlock Text="{Binding Path=Id.Id}" />
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Column ="0" Grid.Row="0" Text="Id" Style="{StaticResource FieldName}" Margin="0 0 5 0" />
+                <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding Path=Id.Id}" />
+                <TextBlock Grid.Column ="0" Grid.Row="1" Text="Theta" Style="{StaticResource FieldName}" Margin="0 0 5 0" />
+                <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding Path=Theta, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextChanged="TextBox_TextChanged" />
+                <TextBlock Grid.Column ="0" Grid.Row="2" Text="Psi" Style="{StaticResource FieldName}" Margin="0 0 5 0" />
+                <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding Path=Psi, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextChanged="TextBox_TextChanged" />
+                <TextBlock Grid.Column ="0" Grid.Row="3" Text="DistA" Style="{StaticResource FieldName}" Margin="0 0 5 0" />
+                <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding Path=DistA, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextChanged="TextBox_TextChanged" />
+                <TextBlock Grid.Column ="0" Grid.Row="4" Text="DistD" Style="{StaticResource FieldName}" Margin="0 0 5 0" />
+                <TextBox Grid.Column="1" Grid.Row="4" Text="{Binding Path=DistD, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextChanged="TextBox_TextChanged" />
+                <TextBlock Grid.Column ="0" Grid.Row="5" Text="Axis" Style="{StaticResource FieldName}" Margin="0 0 5 0" />
+                <controls:AxisControl Grid.Column ="1" Grid.Row="5" AxisDef="{Binding Path=Axis, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </Grid>
         </DataTemplate>
     </Window.Resources>

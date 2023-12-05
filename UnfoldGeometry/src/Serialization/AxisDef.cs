@@ -2,7 +2,7 @@
 using System.Text.Json.Serialization;
 using Unfold.UnfoldGeometry;
 
-namespace UnfoldGeometry.Serialization
+namespace Unfold.Serialization
 {
     public record class AxisDef
     {
@@ -20,11 +20,12 @@ namespace UnfoldGeometry.Serialization
             public double OffsetY { get; set; }
         }
 
+        public StructureId Id { get; set; }
         public AxisTypes Type { get; set; }
         public DependantAxisProperties? DependantProperties { get; set; }
 
 
-        public IAxis? ToAxis(IStructureDefCollection coll)
+        public IAxis? ToAxis(DefStructurePairCollection coll)
         {
             if (Type == AxisTypes.Manual)
             {

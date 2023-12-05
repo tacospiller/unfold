@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Microsoft.Win32;
-using UnfoldWPF.src.Objects;
+using UnfoldWPF.Objects;
 
 namespace UnfoldWPF.Windows
 {
@@ -22,7 +22,7 @@ namespace UnfoldWPF.Windows
 
         private void AddStructures()
         {
-            var children = ActiveFile.Static.FileContent?.ChildrenList;
+            var children = ActiveFile.Static.FileContent;
             if (children == null)
             {
                 return;

@@ -1,11 +1,11 @@
-{
-    "ChildrenList": [
+[
         {
             "$type": "BaseCard",
             "Id": { "Id": "basecard" },
             "Width": 140,
             "Height": 210,
             "Axis": {
+                "Id": { "Id": "basecard" },
                 "Type": "Manual"
             }
         },
@@ -13,6 +13,7 @@
             "$type": "SymmetricVFold",
             "Id": { "Id": "vfold1" },
             "Axis": {
+                "Id": { "Id": "vfold1" },
                 "Type": "Dependant",
                 "DependantProperties": {
                     "ParentStructureId": { "Id": "basecard" },
@@ -25,5 +26,4 @@
             "Theta": 30,
             "Psi": 60
         }
-    ]
-}
+]

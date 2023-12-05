@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
@@ -16,7 +17,7 @@ namespace UnfoldWPF.Objects
         public GeometryModel3D ZAxis { get; set; }
         public Model3DGroup Group { get; set; }
 
-        public StructureMeshCollection? Collection { get; set; }
+        public DefStructureVisiblePair[] Collection { get; set; } = new DefStructureVisiblePair[0];
 
         public Scene3D()
         {
@@ -32,12 +33,15 @@ namespace UnfoldWPF.Objects
 
         public void LoadComponents(StructureMeshCollection coll)
         {
-            Collection?.Children.ForEach(x =>
+            foreach (var pair in Collection)
             {
-                Group.Children.Remove(x.Model3D);
-            });
-            Collection = coll;
-            coll?.Children.ForEach(x => Group.Children.Add(x.Model3D));
+                Group.Children.Remove(pair.Mesh.Model3D);
+            }
+            Collection = coll.Freeze();
+            foreach (var pair in Collection)
+            {
+                Group.Children.Add(pair.Mesh.Model3D);
+            }
             var (center, range) = coll.GetCenterAndRange();
             SetScene(center, range);
         }

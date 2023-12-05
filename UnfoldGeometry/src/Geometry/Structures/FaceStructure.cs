@@ -1,5 +1,5 @@
 ﻿using System.Numerics;
-using UnfoldGeometry.Serialization;
+using Unfold.Serialization;
 
 namespace Unfold.UnfoldGeometry
 {

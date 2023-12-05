@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace UnfoldGeometry.Serialization
+namespace Unfold.Serialization
 {
     public record struct StructureId
     {

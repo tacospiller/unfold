@@ -1,4 +1,4 @@
-﻿namespace UnfoldGeometry.Serialization
+﻿namespace Unfold.Serialization
 {
     public class SerializationException : Exception
     {

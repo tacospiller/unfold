@@ -1,5 +1,5 @@
 ﻿using System.Text.Json;
-using UnfoldGeometry.Serialization;
+using Unfold.Serialization;
 
 namespace Tests
 {
@@ -8,7 +8,7 @@ namespace Tests
         [Fact]
         public void BaseCard_serialization()
         {
-            var def = new BaseCardDef(new StructureId("testcard"), 148, 210, new AxisDef(AxisDef.AxisTypes.Manual, null));
+            var def = new BaseCardDef { Id = new StructureId("testcard"), Width = 148, Height = 210, Axis = new AxisDef { Type = AxisDef.AxisTypes.Manual } };
             var serialized = JsonSerializer.Serialize(def);
             Assert.Equal("""{"Id":{"Id":"testcard"},"Width":148,"Height":210,"Axis":{"Type":"Manual","DependantProperties":null}}""", serialized);
         }
@@ -18,25 +18,25 @@ namespace Tests
         {
             var str = """{"Id":{"Id":"testcard"},"Width":148,"Height":210,"Axis":{"Type":"Manual","DependantProperties":null}}""";
             var deserialized = JsonSerializer.Deserialize<BaseCardDef>(str);
-            var def = new BaseCardDef(new StructureId("testcard"), 148, 210, new AxisDef(AxisDef.AxisTypes.Manual, null));
+            var def = new BaseCardDef{ Id = new StructureId("testcard"), Width = 148, Height = 210, Axis = new AxisDef{ Type = AxisDef.AxisTypes.Manual } };
             Assert.Equal(def, deserialized);
         }
 
         [Fact]
         public void Collection_round_trip()
         {
-            var coll = new StructureDefCollection(new List<IStructureDef> {
-                new BaseCardDef(new StructureId("test1"), 148, 210, new AxisDef(AxisDef.AxisTypes.Manual, null)),
-                new SymmetricParallelogramDef(new StructureId("test2"), new AxisDef(AxisDef.AxisTypes.Manual, null), 10, 50, 20)
-            });
+            var coll = new List<IStructureDef> {
+                new BaseCardDef{ Id = new StructureId("test1"), Width = 148, Height = 210, Axis = new AxisDef{ Type = AxisDef.AxisTypes.Manual } },
+                new SymmetricParallelogramDef{ Id = new StructureId("test2"), Axis = new AxisDef{ Type = AxisDef.AxisTypes.Manual }, DistFromAxis = 10, Width = 50, Height = 20 }
+            };
 
             var str = JsonSerializer.Serialize(coll);
 
-            var deserialized = JsonSerializer.Deserialize<StructureDefCollection>(str);
+            var deserialized = JsonSerializer.Deserialize<List<IStructureDef>>(str);
 
             Assert.NotNull(deserialized);
-            Assert.Equal(coll.Children.Count, deserialized.Children.Count);
-            Assert.All(deserialized.Children, (x) => { Assert.Equal(coll.Children[x.Key], x.Value); });
+            Assert.Equal(coll.Count, deserialized.Count);
+            Assert.All(deserialized, (x, i) => { Assert.Equal(coll[i], x); });
         }
     }
 }

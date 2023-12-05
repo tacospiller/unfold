@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System.Diagnostics;
+using System.Numerics;
 
 namespace Unfold.UnfoldGeometry
 {
@@ -63,7 +64,8 @@ namespace Unfold.UnfoldGeometry
                 Math.Abs((qa - p3).Length() - r3) > EqualThreshold
                 )
             {
-                throw new MathException("No point satisfies given restriction.");
+                Trace.WriteLine("No point satisfies given restriction.");
+                //throw new MathException("No point satisfies given restriction.");
             }
             return qa;
         }

@@ -4,38 +4,79 @@ using System.Text.Json;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
 using Unfold.UnfoldWPF;
-using UnfoldGeometry.Serialization;
+using Unfold.Serialization;
+using Unfold.UnfoldGeometry;
 
 namespace UnfoldWPF.Objects
 {
+    public record class DefStructureVisiblePair
+    {
+        public DefStructurePair Pair { get; set; }
+        public bool Selected { get; set; } = false;
+        public StructureMesh Mesh { get; set; }
+    }
+
     public class StructureMeshCollection
     {
-        public List<StructureMesh> Children { get; } = new List<StructureMesh>();
+        public Dictionary<StructureId, DefStructureVisiblePair> Children { get; } = new Dictionary<StructureId, DefStructureVisiblePair>();
 
-        public static StructureMeshCollection CreateFromJson(string json)
+        public DefStructureVisiblePair[] Freeze()
         {
-            var coll = JsonSerializer.Deserialize<StructureDefCollection>(json);
-            return CreateFromDefs(coll);
+            return Children.Values.ToArray();
+        }
+        public void ReloadFromDefs(List<IStructureDef> defs)
+        {
+            Children.Clear();
+            foreach (var def in defs)
+            {
+                var pair = new DefStructurePair { Def = def };
+                Children.Add(def.Id, new DefStructureVisiblePair
+                {
+                    Pair = pair,
+                });
+            }
+
+            RecreateAllMeshes();
         }
 
-        public static StructureMeshCollection CreateFromDefs(StructureDefCollection coll)
+        public void RecreateAllMeshes()
         {
-            var meshes = new StructureMeshCollection();
-            meshes.Children.AddRange(coll.ChildrenList.Select(x => new StructureMesh(x.GetStructure(coll), DisplayHelper.RandomColor(), DisplayHelper.RandomColor())));
-            return meshes;
+            var coll = new DefStructurePairCollection();
+            coll.AddRange(Children.Values.Select(x => x.Pair));
+
+            foreach (var pair in Children)
+            {
+                var structure = pair.Value.Pair.GetStructure(coll);
+                pair.Value.Mesh = new StructureMesh(structure, DisplayHelper.RandomColor(), DisplayHelper.RandomColor());
+            }
+        }
+
+        public void UpdateManualSlider(StructureId id, double value)
+        {
+            var child = Children[id];
+            var rot = (child.Pair.Structure as RotatingStructure);
+            if (rot != null)
+            {
+                var manualAxis = rot.Axis as ManualAxis;
+                manualAxis?.SetAngle(value);
+            }
+            Recalculate();
         }
 
         public (Point3D, double) GetCenterAndRange()
         {
-            Point3D maxPoint = Children.SelectMany(x => x.Mesh.Positions).MaxBy(x => (x - new Point3D(0,0,0)).Length);
-            Point3D minPoint = Children.SelectMany(x => x.Mesh.Positions).MaxBy(x => (x - maxPoint).Length);
+            Point3D maxPoint = Children.SelectMany(x => x.Value.Mesh.Mesh.Positions).MaxBy(x => (x - new Point3D(0,0,0)).Length);
+            Point3D minPoint = Children.SelectMany(x => x.Value.Mesh.Mesh.Positions).MaxBy(x => (x - maxPoint).Length);
 
             return ((Point3D)(((Vector3D)maxPoint + (Vector3D)minPoint) / 2), (maxPoint - minPoint).Length / 2);
         }
 
         public void Recalculate()
         {
-            Children.ForEach(x => x.Recalculate());
+            foreach (var child in Children)
+            {
+                child.Value.Mesh.Recalculate();
+            }
         }
     }
 }

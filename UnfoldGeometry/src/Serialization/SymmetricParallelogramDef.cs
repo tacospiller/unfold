@@ -1,6 +1,6 @@
 ﻿using Unfold.UnfoldGeometry;
 
-namespace UnfoldGeometry.Serialization
+namespace Unfold.Serialization
 {
     public record class SymmetricParallelogramDef : IStructureDef
     {
@@ -11,14 +11,9 @@ namespace UnfoldGeometry.Serialization
         public double Width { get; set; }
 
 
-        private IStructure? _structure;
-        public IStructure GetStructure(IStructureDefCollection coll)
+        public IStructure CreateStructure(DefStructurePairCollection coll)
         {
-            if (_structure == null)
-            {
-                _structure = new SymmetricParallelStructure(coll, this);
-            }
-            return _structure;
+            return new SymmetricParallelStructure(coll, this);
         }
     }
 }

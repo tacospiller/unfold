@@ -1,5 +1,5 @@
 ﻿using System.Numerics;
-using UnfoldGeometry.Serialization;
+using Unfold.Serialization;
 
 namespace Unfold.UnfoldGeometry
 {
@@ -97,7 +97,7 @@ namespace Unfold.UnfoldGeometry
             }
         }
 
-        public SymmetricVFoldStructure(IStructureDefCollection coll, SymmetricVFoldDef def) : base(def.Axis.ToAxis(coll) ?? new ManualAxis())
+        public SymmetricVFoldStructure(DefStructurePairCollection coll, SymmetricVFoldDef def) : base(def.Axis.ToAxis(coll) ?? new ManualAxis())
         {
             _def = def;
         }

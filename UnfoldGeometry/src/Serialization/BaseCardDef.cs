@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 using Unfold.UnfoldGeometry;
 
-namespace UnfoldGeometry.Serialization
+namespace Unfold.Serialization
 {
     public record class BaseCardDef : IStructureDef
     {
@@ -11,14 +11,9 @@ namespace UnfoldGeometry.Serialization
         public AxisDef Axis { get; set; }
 
 
-        private IStructure? _structure;
-        public IStructure GetStructure(IStructureDefCollection coll)
+        public IStructure CreateStructure(DefStructurePairCollection coll)
         {
-            if (_structure == null)
-            {
-                _structure = new BaseCardStructure(coll, this);
-            }
-            return _structure;
+            return new BaseCardStructure(coll, this);
         }
     }
 }
