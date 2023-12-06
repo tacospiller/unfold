@@ -1,10 +1,13 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using Microsoft.Win32;
+using Unfold.Serialization;
 using UnfoldWPF.Objects;
 using UnfoldWPF.UserControls;
 
@@ -12,12 +15,45 @@ namespace UnfoldWPF.Windows
 {
     public partial class MainWindow : Window
     {
+        private List<SelectionChangedEventHandler> _selectionUpdaters = new List<SelectionChangedEventHandler>();
         public MainWindow()
         {
             InitializeComponent();
             ActiveFile.Static.FileLoaded += (o, e) =>
             {
-                Structures.Items.Add(new BaseCardListItem { Pair = ActiveFile.Static.Collection.Children.FirstOrDefault().Value });
+                foreach (var handler in _selectionUpdaters)
+                {
+                    Structures.SelectionChanged -= handler;
+                }
+                _selectionUpdaters.Clear();
+
+                foreach (var (key, val) in ActiveFile.Static.Collection.Children)
+                {
+                    object control = null;
+                    switch (val.Def)
+                    {
+                        case BaseCardDef bcd:
+                            control = new BaseCardListItem { Pair = val };
+                            break;
+                        case SymmetricVFoldDef svd:
+                            control = new SymmetricVFoldListItem { Pair = val };
+                            break;
+                    }
+
+                    if (control == null)
+                    {
+                        continue;
+                    }
+
+                    Structures.Items.Add(control);
+
+                    var del = new SelectionChangedEventHandler((object o, SelectionChangedEventArgs e) =>
+                    {
+                        val.Selected = Structures.SelectedItem == control;
+                    });
+                    _selectionUpdaters.Add(del);
+                    Structures.SelectionChanged += del;
+                }
             };
         }
 
@@ -47,5 +83,6 @@ namespace UnfoldWPF.Windows
                 ActiveFile.Static.Load(dialog.FileName);
             }
         }
+
     }
 }

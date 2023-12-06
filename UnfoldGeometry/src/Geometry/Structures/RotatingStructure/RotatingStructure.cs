@@ -17,6 +17,11 @@ namespace Unfold.UnfoldGeometry
             Axis = StructureBuilder.BuildAxis(coll, def.Axis) ?? new ManualAxis();
         }
 
+        public void RebuildAxis(IStructureCache coll)
+        {
+            Axis = StructureBuilder.BuildAxis(coll, _def.Axis) ?? new ManualAxis();
+        }
+
 
         public virtual IAxis? GetAxis(AxisDescriptor axis)
         {

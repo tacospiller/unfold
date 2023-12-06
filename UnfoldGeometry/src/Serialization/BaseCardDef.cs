@@ -9,5 +9,10 @@ namespace Unfold.Serialization
         public double Width { get; set; }
         public double Height { get; set; }
         public AxisDef Axis { get; set; }
+
+        public AxisDescriptor[] GetAllAxisDescriptors()
+        {
+            return new AxisDescriptor[] { IRotatingStructureDef.AxisDescriptors.BaseAxis };
+        }
     }
 }

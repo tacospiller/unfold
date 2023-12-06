@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="UnfoldWPF.UserControls.BaseCardListItem"
+﻿<UserControl x:Class="UnfoldWPF.UserControls.SymmetricVFoldListItem"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -23,15 +23,21 @@
             <RowDefinition />
             <RowDefinition />
             <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
         </Grid.RowDefinitions>
         <TextBlock Grid.Column="0" Grid.Row="0" Text="Type" Style="{StaticResource ResourceKey=FieldName}" />
-        <TextBlock Grid.Column="1" Grid.Row="0" Text="BaseCard" />
+        <TextBlock Grid.Column="1" Grid.Row="0" Text="SymmetricVFold" />
         <TextBlock Grid.Column="0" Grid.Row="1" Text="Id" Style="{StaticResource ResourceKey=FieldName}" />
         <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding Def.Id.Id}" />
-        <TextBlock Grid.Column="0" Grid.Row="2" Text="Width" Style="{StaticResource ResourceKey=FieldName}" />
-        <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding Mode=TwoWay, Path=Def.Width}" TextChanged="TextBox_TextChanged" />
-        <TextBlock Grid.Column="0" Grid.Row="3" Text="Height" Style="{StaticResource ResourceKey=FieldName}" />
-        <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding Mode=TwoWay, Path=Def.Height}" TextChanged="TextBox_TextChanged" />
-        <local:AxisControl Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2" Pair="{Binding Pair, ElementName=root}" />
+        <TextBlock Grid.Column="0" Grid.Row="2" Text="Theta" Style="{StaticResource ResourceKey=FieldName}" />
+        <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding Mode=TwoWay, Path=Def.Theta}" TextChanged="TextBox_TextChanged" />
+        <TextBlock Grid.Column="0" Grid.Row="3" Text="Psi" Style="{StaticResource ResourceKey=FieldName}" />
+        <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding Mode=TwoWay, Path=Def.Psi}" TextChanged="TextBox_TextChanged" />
+        <TextBlock Grid.Column="0" Grid.Row="4" Text="DistA" Style="{StaticResource ResourceKey=FieldName}" />
+        <TextBox Grid.Column="1" Grid.Row="4" Text="{Binding Mode=TwoWay, Path=Def.DistA}" TextChanged="TextBox_TextChanged" />
+        <TextBlock Grid.Column="0" Grid.Row="5" Text="DistD" Style="{StaticResource ResourceKey=FieldName}" />
+        <TextBox Grid.Column="1" Grid.Row="5" Text="{Binding Mode=TwoWay, Path=Def.DistD}" TextChanged="TextBox_TextChanged" />
+        <local:AxisControl Grid.Column="0" Grid.Row="6" Grid.ColumnSpan="2" Pair="{Binding Pair, ElementName=root}" />
     </Grid>
 </UserControl>

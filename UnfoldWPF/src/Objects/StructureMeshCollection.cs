@@ -12,9 +12,40 @@ namespace UnfoldWPF.Objects
     public record class DefStructureVisiblePair
     {
         public IStructureDef Def { get; set; }
-        public IStructure Structure { get; set; }
-        public bool Selected { get; set; } = false;
-        public StructureMesh Mesh { get; set; }
+        public IStructure? Structure { get; set; }
+        private bool _selected = false;
+        public bool Selected
+        {
+            get
+            {
+                return _selected;
+            }
+            set
+            {
+                if (_selected != value)
+                {
+                    if (value)
+                    {
+                        Mesh.UpdateColor(Colors.IndianRed, Colors.DarkOrange);
+                    } else
+                    {
+                        Mesh.UpdateColor(DisplayHelper.RandomColor(), DisplayHelper.RandomColor());
+                    }
+                }
+                _selected = value;
+            }
+        }
+        public StructureMesh? Mesh { get; set; }
+        public DefStructureVisiblePair DeepCopy()
+        {
+            return new DefStructureVisiblePair
+            {
+                Def = Def,
+                Structure = Structure,
+                Mesh = Mesh,
+                Selected = false
+            };
+        }
     }
 
     public class StructureMeshCollection : IStructureCache
@@ -23,7 +54,7 @@ namespace UnfoldWPF.Objects
 
         public DefStructureVisiblePair[] Freeze()
         {
-            return Children.Values.ToArray();
+            return Children.Values.Select(x => x.DeepCopy()).ToArray();
         }
 
         public IStructure GetStructure(StructureId structureId)
@@ -50,6 +81,11 @@ namespace UnfoldWPF.Objects
 
         public void RecreateAllMeshes()
         {
+            foreach (var pair in Children)
+            {
+                pair.Value.Structure = null;
+                pair.Value.Mesh = null;
+            }
             foreach (var pair in Children)
             {
                 var structure = GetStructure(pair.Value.Def.Id);

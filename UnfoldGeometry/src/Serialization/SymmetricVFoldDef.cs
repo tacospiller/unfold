@@ -18,5 +18,16 @@ namespace Unfold.Serialization
             public static AxisDescriptor AInner = new AxisDescriptor("SymmetricVFold.AInner");
             public static AxisDescriptor CInner = new AxisDescriptor("SymmetricVFold.CInner");
         }
+
+        public AxisDescriptor[] GetAllAxisDescriptors()
+        {
+            return new AxisDescriptor[] {
+                IRotatingStructureDef.AxisDescriptors.BaseAxis,
+                AxisDescriptors.AOuter,
+                AxisDescriptors.COuter,
+                AxisDescriptors.AInner,
+                AxisDescriptors.CInner
+            };
+        }
     }
 }

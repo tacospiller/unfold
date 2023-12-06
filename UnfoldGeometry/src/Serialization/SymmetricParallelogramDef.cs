@@ -15,5 +15,14 @@ namespace Unfold.Serialization
             public static AxisDescriptor AOuter = new AxisDescriptor("SymmetricParalellogram.AOuter");
             public static AxisDescriptor BOuter => new AxisDescriptor("SymmetricParalellogram.BOuter");
         }
+
+        public AxisDescriptor[] GetAllAxisDescriptors()
+        {
+            return new AxisDescriptor[] { 
+                IRotatingStructureDef.AxisDescriptors.BaseAxis, 
+                AxisDescriptors.AOuter, 
+                AxisDescriptors.BOuter 
+            };
+        }
     }
 }

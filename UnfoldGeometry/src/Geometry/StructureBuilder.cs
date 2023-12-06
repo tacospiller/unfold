@@ -11,7 +11,7 @@ namespace Unfold.UnfoldGeometry
             }
             var str = cache.GetStructure(def.DependantProperties.ParentStructureId);
             var axis = str.GetAxis(def.DependantProperties.AxisDescriptor);
-            return axis.OffsetY(def.DependantProperties.OffsetY);
+            return axis?.OffsetY(def.DependantProperties.OffsetY) ?? new ManualAxis();
         }
 
         public static IStructure? BuildStructure(IStructureCache cache, IStructureDef def)
