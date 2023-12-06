@@ -2,7 +2,7 @@
 
 namespace Unfold.Serialization
 {
-    public record class SymmetricParallelogramDef : IStructureDef
+    public record class SymmetricParallelogramDef : IRotatingStructureDef
     {
         public StructureId Id { get; set; }
         public AxisDef Axis { get; set; }
@@ -10,10 +10,10 @@ namespace Unfold.Serialization
         public double Height { get; set; }
         public double Width { get; set; }
 
-
-        public IStructure CreateStructure(DefStructurePairCollection coll)
+        public static class AxisDescriptors
         {
-            return new SymmetricParallelStructure(coll, this);
+            public static AxisDescriptor AOuter = new AxisDescriptor("SymmetricParalellogram.AOuter");
+            public static AxisDescriptor BOuter => new AxisDescriptor("SymmetricParalellogram.BOuter");
         }
     }
 }

@@ -1,7 +1,7 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Input;
 using Microsoft.Win32;
 using UnfoldWPF.Objects;
@@ -13,22 +13,8 @@ namespace UnfoldWPF.Windows
         public MainWindow()
         {
             InitializeComponent();
-            AddStructures();
-            ActiveFile.Static.FileLoaded += (object? sender, ActiveFileLoadedArguments e) =>
-            {
-                AddStructures();
-            };
         }
 
-        private void AddStructures()
-        {
-            var children = ActiveFile.Static.FileContent;
-            if (children == null)
-            {
-                return;
-            }
-            Structures.ItemsSource = children;
-        }
 
         private void Save_Executed(object sender, ExecutedRoutedEventArgs e)
         {
@@ -54,11 +40,6 @@ namespace UnfoldWPF.Windows
             {
                 ActiveFile.Static.Load(dialog.FileName);
             }
-        }
-
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            ActiveFile.Static.InvokeStructureUpdated();
         }
     }
 }

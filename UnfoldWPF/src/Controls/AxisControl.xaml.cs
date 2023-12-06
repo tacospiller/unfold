@@ -20,17 +20,17 @@ namespace UnfoldWPF.UserControls
             };
             Loaded += (obj, e) =>
             {
-                AxisType.SelectedItem = AxisDef.Type;
+                AxisType.SelectedItem = (Pair.Def as IRotatingStructureDef)?.Axis.Type ?? AxisDef.AxisTypes.Manual;
             };
         }
 
-        public static readonly DependencyProperty AxisDefProperty =
-            DependencyProperty.Register("AxisDef", typeof(Unfold.Serialization.AxisDef), typeof(AxisControl), new UIPropertyMetadata(null));
+        public static readonly DependencyProperty PairProperty =
+            DependencyProperty.Register("AxisDef", typeof(DefStructureVisiblePair), typeof(AxisControl), new UIPropertyMetadata(null));
 
-        public Unfold.Serialization.AxisDef AxisDef
+        public DefStructureVisiblePair Pair
         {
-            get { return (Unfold.Serialization.AxisDef)GetValue(AxisDefProperty); }
-            set { SetValue(AxisDefProperty, value); }
+            get { return (DefStructureVisiblePair)GetValue(PairProperty); }
+            set { SetValue(PairProperty, value); }
         }
 
         private void AxisType_Selected(object sender, RoutedEventArgs e)

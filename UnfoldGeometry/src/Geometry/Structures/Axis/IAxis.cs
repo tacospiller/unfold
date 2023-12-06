@@ -6,6 +6,7 @@ namespace Unfold.UnfoldGeometry
     {
         Matrix4x4 Transform { get; }
         double Angle { get; }
+        bool Valid { get; }
 
         IAxis OffsetY(double offsetY)
         {
@@ -17,6 +18,9 @@ namespace Unfold.UnfoldGeometry
     {
         private readonly double _offsetY;
         private readonly IAxis _parent;
+
+        public bool Valid => _parent.Valid;
+
         public OffsetAxis(double offsetY, IAxis parent)
         {
             _offsetY = offsetY;

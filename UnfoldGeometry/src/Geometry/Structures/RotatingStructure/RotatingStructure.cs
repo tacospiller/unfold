@@ -5,21 +5,22 @@ namespace Unfold.UnfoldGeometry
 {
     public abstract class RotatingStructure : IStructure
     {
-        public virtual IAxis Axis { get; }
+        public virtual IAxis Axis { get; private set; }
 
-        public RotatingStructure(IAxis axis)
+        private IRotatingStructureDef _def;
+
+#pragma warning disable CS8618
+        public RotatingStructure(IStructureCache coll, IRotatingStructureDef def)
+#pragma warning restore CS8618
         {
-            Axis = axis;
+            _def = def;
+            Axis = StructureBuilder.BuildAxis(coll, def.Axis) ?? new ManualAxis();
         }
 
-        public static class AxisDescriptors
-        {
-            public static AxisDescriptor BaseAxis = new AxisDescriptor("RotatingStructure.BaseAxis");
-        }
 
         public virtual IAxis? GetAxis(AxisDescriptor axis)
         {
-            if (axis == AxisDescriptors.BaseAxis)
+            if (axis == IRotatingStructureDef.AxisDescriptors.BaseAxis)
             {
                 return Axis;
             }
@@ -33,5 +34,6 @@ namespace Unfold.UnfoldGeometry
         }
 
         protected abstract Vector3[] CalculateUntransformedFaces();
+        
     }
 }

@@ -11,12 +11,13 @@ namespace UnfoldWPF.Objects
 {
     public record class DefStructureVisiblePair
     {
-        public DefStructurePair Pair { get; set; }
+        public IStructureDef Def { get; set; }
+        public IStructure Structure { get; set; }
         public bool Selected { get; set; } = false;
         public StructureMesh Mesh { get; set; }
     }
 
-    public class StructureMeshCollection
+    public class StructureMeshCollection : IStructureCache
     {
         public Dictionary<StructureId, DefStructureVisiblePair> Children { get; } = new Dictionary<StructureId, DefStructureVisiblePair>();
 
@@ -24,16 +25,24 @@ namespace UnfoldWPF.Objects
         {
             return Children.Values.ToArray();
         }
+
+        public IStructure GetStructure(StructureId structureId)
+        {
+            var pair = Children[structureId];
+            if (pair != null)
+            {
+                pair.Structure ??= StructureBuilder.BuildStructure(this, pair.Def);
+                return pair.Structure;
+            }
+            return null;
+        }
+
         public void ReloadFromDefs(List<IStructureDef> defs)
         {
             Children.Clear();
             foreach (var def in defs)
             {
-                var pair = new DefStructurePair { Def = def };
-                Children.Add(def.Id, new DefStructureVisiblePair
-                {
-                    Pair = pair,
-                });
+                Children.Add(def.Id, new DefStructureVisiblePair { Def = def });
             }
 
             RecreateAllMeshes();
@@ -41,12 +50,9 @@ namespace UnfoldWPF.Objects
 
         public void RecreateAllMeshes()
         {
-            var coll = new DefStructurePairCollection();
-            coll.AddRange(Children.Values.Select(x => x.Pair));
-
             foreach (var pair in Children)
             {
-                var structure = pair.Value.Pair.GetStructure(coll);
+                var structure = StructureBuilder.BuildStructure(this, pair.Value.Def);
                 pair.Value.Mesh = new StructureMesh(structure, DisplayHelper.RandomColor(), DisplayHelper.RandomColor());
             }
         }
@@ -54,7 +60,7 @@ namespace UnfoldWPF.Objects
         public void UpdateManualSlider(StructureId id, double value)
         {
             var child = Children[id];
-            var rot = (child.Pair.Structure as RotatingStructure);
+            var rot = (child.Structure as RotatingStructure);
             if (rot != null)
             {
                 var manualAxis = rot.Axis as ManualAxis;

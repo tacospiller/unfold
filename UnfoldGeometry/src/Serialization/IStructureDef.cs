@@ -8,7 +8,6 @@ namespace Unfold.Serialization
     [JsonDerivedType(typeof(SymmetricVFoldDef), "SymmetricVFold")]
     public interface IStructureDef
     {
-        public StructureId Id { get; }
-        public IStructure CreateStructure(DefStructurePairCollection coll);
+        StructureId Id { get; }
     }
 }
