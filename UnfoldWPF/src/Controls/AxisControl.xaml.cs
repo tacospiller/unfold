@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using Unfold.Serialization;
+using Unfold.UnfoldGeometry;
 using UnfoldWPF.Objects;
 
 namespace UnfoldWPF.UserControls
@@ -15,17 +16,17 @@ namespace UnfoldWPF.UserControls
         {
             InitializeComponent();
             AxisType.ItemsSource = new object[] {
-                Unfold.Serialization.AxisDef.AxisTypes.Manual,
-                Unfold.Serialization.AxisDef.AxisTypes.Dependant,
+                AxisDef.AxisTypes.Manual,
+                AxisDef.AxisTypes.Dependant,
             };
             Loaded += (obj, e) =>
             {
-                AxisType.SelectedItem = (Pair.Def as IRotatingStructureDef)?.Axis.Type ?? AxisDef.AxisTypes.Manual;
+                AxisType.SelectedItem = (Pair?.Def as IRotatingStructureDef)?.Axis?.Type ?? AxisDef.AxisTypes.Manual;
             };
         }
 
         public static readonly DependencyProperty PairProperty =
-            DependencyProperty.Register("AxisDef", typeof(DefStructureVisiblePair), typeof(AxisControl), new UIPropertyMetadata(null));
+            DependencyProperty.Register("Pair", typeof(DefStructureVisiblePair), typeof(AxisControl), new UIPropertyMetadata(null));
 
         public DefStructureVisiblePair Pair
         {
@@ -35,20 +36,25 @@ namespace UnfoldWPF.UserControls
 
         private void AxisType_Selected(object sender, RoutedEventArgs e)
         {
-            AxisDef.Type = (Unfold.Serialization.AxisDef.AxisTypes)AxisType.SelectedItem;
-            if (AxisDef.Type == AxisDef.AxisTypes.Manual)
+            if ((Pair?.Def as IRotatingStructureDef)?.Axis != null)
             {
-                ManualSlider.Visibility = Visibility.Visible;
-            } else
-            {
-                ManualSlider.Visibility = Visibility.Hidden;
+                (Pair.Def as IRotatingStructureDef).Axis.Type = (AxisDef.AxisTypes)AxisType.SelectedItem;
+                if ((AxisDef.AxisTypes)AxisType.SelectedItem == AxisDef.AxisTypes.Manual)
+                {
+                    ManualSlider.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    ManualSlider.Visibility = Visibility.Hidden;
+                }
             }
-            Trace.WriteLine(AxisDef);
         }
 
         private void ManualSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            ActiveFile.Static.Collection.UpdateManualSlider(AxisDef.Id, Unfold.UnfoldGeometry.UnfoldMath.DegToRad(ManualSlider.Value));
+            var axis = ((Pair?.Structure as RotatingStructure)?.Axis as ManualAxis);
+            axis?.SetAngle(UnfoldMath.DegToRad(ManualSlider.Value));
+            ActiveFile.Static.InvokeStructureUpdated();
         }
     }
 }

@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Unfold.Serialization;
+using UnfoldWPF.Objects;
 
 namespace UnfoldWPF.UserControls
 {
@@ -23,6 +25,20 @@ namespace UnfoldWPF.UserControls
         public BaseCardListItem()
         {
             InitializeComponent();
+        }
+
+        public static readonly DependencyProperty PairProperty =
+            DependencyProperty.Register("Pair", typeof(DefStructureVisiblePair), typeof(BaseCardListItem), new UIPropertyMetadata(null));
+
+        public DefStructureVisiblePair Pair
+        {
+            get { return (DefStructureVisiblePair)GetValue(PairProperty); }
+            set { SetValue(PairProperty, value); }
+        }
+
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            ActiveFile.Static.InvokeStructureUpdated();
         }
     }
 }

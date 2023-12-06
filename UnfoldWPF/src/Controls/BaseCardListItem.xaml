@@ -5,8 +5,30 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:UnfoldWPF.UserControls"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-            
+             d:DesignHeight="450" d:DesignWidth="200" d:Background="White"
+             x:Name="root">
+    <UserControl.Resources>
+        <Style x:Key="FieldName" TargetType="TextBlock">
+            <Setter Property="FontWeight" Value="bold"/>
+        </Style>
+    </UserControl.Resources>
+    <Grid DataContext="{Binding Pair, ElementName=root}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="1*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Column="0" Grid.Row="0" Text="Id" Style="{StaticResource ResourceKey=FieldName}" />
+        <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding Def.Id.Id}" />
+        <TextBlock Grid.Column="0" Grid.Row="1" Text="Width" Style="{StaticResource ResourceKey=FieldName}" />
+        <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding Mode=TwoWay, Path=Def.Width}" TextChanged="TextBox_TextChanged" />
+        <TextBlock Grid.Column="0" Grid.Row="2" Text="Height" Style="{StaticResource ResourceKey=FieldName}" />
+        <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding Mode=TwoWay, Path=Def.Height}" TextChanged="TextBox_TextChanged" />
+        <local:AxisControl Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Pair="{Binding Pair, ElementName=root}" />
     </Grid>
 </UserControl>

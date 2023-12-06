@@ -52,7 +52,7 @@ namespace UnfoldWPF.Objects
         {
             foreach (var pair in Children)
             {
-                var structure = StructureBuilder.BuildStructure(this, pair.Value.Def);
+                var structure = GetStructure(pair.Value.Def.Id);
                 pair.Value.Mesh = new StructureMesh(structure, DisplayHelper.RandomColor(), DisplayHelper.RandomColor());
             }
         }

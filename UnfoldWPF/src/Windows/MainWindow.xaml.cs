@@ -1,10 +1,12 @@
 ﻿using System.Diagnostics;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using Microsoft.Win32;
 using UnfoldWPF.Objects;
+using UnfoldWPF.UserControls;
 
 namespace UnfoldWPF.Windows
 {
@@ -13,6 +15,10 @@ namespace UnfoldWPF.Windows
         public MainWindow()
         {
             InitializeComponent();
+            ActiveFile.Static.FileLoaded += (o, e) =>
+            {
+                Structures.Items.Add(new BaseCardListItem { Pair = ActiveFile.Static.Collection.Children.FirstOrDefault().Value });
+            };
         }
 
 
