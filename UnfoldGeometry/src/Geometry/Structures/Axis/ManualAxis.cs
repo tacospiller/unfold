@@ -6,7 +6,6 @@ namespace Unfold.UnfoldGeometry
     {
         public Matrix4x4 Transform { get; }
         public double Angle { get; private set; }
-        public bool Valid { get; set; }
 
         public ManualAxis()
         {

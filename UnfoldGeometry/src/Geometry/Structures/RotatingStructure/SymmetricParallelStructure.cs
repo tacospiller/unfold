@@ -40,8 +40,8 @@ namespace Unfold.UnfoldGeometry
             }
         }
 
-        public IAxis AOuterAxis => new DynamicAxis(() => Matrix4x4.CreateTranslation((float)DistFromAxis, 0, 0) * Axis.Transform, () => UnfoldMath.GetAngle(D, F - D), () => Axis.Valid);
-        public IAxis BOuterAxis => new DynamicAxis(() => Matrix4x4.CreateTranslation((float)DistFromAxis, 0, 0) * Matrix4x4.CreateRotationZ((float)Axis.Angle) * Axis.Transform, () => UnfoldMath.GetAngle(F, F - E), () => Axis.Valid);
+        public IAxis AOuterAxis => new DynamicAxis(() => Matrix4x4.CreateTranslation((float)DistFromAxis, 0, 0) * Axis.Transform, () => UnfoldMath.GetAngle(D, F - D));
+        public IAxis BOuterAxis => new DynamicAxis(() => Matrix4x4.CreateTranslation((float)DistFromAxis, 0, 0) * Matrix4x4.CreateRotationZ((float)Axis.Angle) * Axis.Transform, () => UnfoldMath.GetAngle(F, F - E));
 
         protected override Vector3[] CalculateUntransformedFaces()
         {

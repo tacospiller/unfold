@@ -71,8 +71,8 @@ namespace UnfoldWPF.UserControls
 
         private void ManualSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            var axis = ((Pair?.Structure as RotatingStructure)?.Axis as ManualAxis);
-            axis?.SetAngle(UnfoldMath.DegToRad(ManualSlider.Value));
+            var axis = ((Pair?.Structure as RotatingStructure)?.Axis);
+            axis?.SetManualAxis(UnfoldMath.DegToRad(ManualSlider.Value));
             ActiveFile.Static.InvokeStructureUpdated();
         }
 
@@ -80,16 +80,23 @@ namespace UnfoldWPF.UserControls
         {
             var dep = (Pair.Def as IRotatingStructureDef).Axis.DependantProperties;
             AxisDesc.ItemsSource = (ActiveFile.Static.Collection.Children[dep.ParentStructureId].Def as IRotatingStructureDef).GetAllAxisDescriptors();
+
+            var axis = ((Pair?.Structure as RotatingStructure)?.Axis);
+            axis.RebuildAxis(ActiveFile.Static.Collection);
             ActiveFile.Static.InvokeAxisUpdated();
         }
 
         private void AxisDesc_Selected(object sender, RoutedEventArgs e)
         {
+            var axis = ((Pair?.Structure as RotatingStructure)?.Axis);
+            axis.RebuildAxis(ActiveFile.Static.Collection);
             ActiveFile.Static.InvokeAxisUpdated();
         }
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
+            var axis = ((Pair?.Structure as RotatingStructure)?.Axis);
+            axis.RebuildAxis(ActiveFile.Static.Collection);
             ActiveFile.Static.InvokeAxisUpdated();
         }
     }

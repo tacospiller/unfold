@@ -44,8 +44,7 @@ namespace Unfold.UnfoldGeometry
             {
                 return new DynamicAxis(
                     () => { return Matrix4x4.CreateRotationZ((float)-Theta) * Axis.Transform; },
-                    () => { return UnfoldMath.GetAngle(Plane.CreateFromVertices(A, B, D).Normal, Plane.CreateFromVertices(A, B, DInitial).Normal); },
-                    () => Axis.Valid
+                    () => { return UnfoldMath.GetAngle(Plane.CreateFromVertices(A, B, D).Normal, Plane.CreateFromVertices(A, B, DInitial).Normal); }
                     );
             }
         }
@@ -62,8 +61,7 @@ namespace Unfold.UnfoldGeometry
                 }, () =>
                 {
                     return UnfoldMath.GetAngle(Plane.CreateFromVertices(C, B, D).Normal, Plane.CreateFromVertices(C, B, DFinal).Normal);
-                },
-                () => Axis.Valid);
+                });
             }
         }
 

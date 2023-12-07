@@ -14,11 +14,7 @@ namespace UnfoldWPF.UserControls
 
             ActiveFile.Static.FileLoaded += OnFileLoaded;
             ActiveFile.Static.StructureUpdated += OnStructureUpdated;
-            ActiveFile.Static.AxisUpdated += (o, e) =>
-            {
-                ActiveFile.Static.Collection.RecreateAllMeshes();
-                _scene.LoadComponents(ActiveFile.Static.Collection);
-            };
+            ActiveFile.Static.AxisUpdated += OnStructureUpdated;
         }
 
         public void OnFileLoaded(object? sender, ActiveFileLoadedArguments args)

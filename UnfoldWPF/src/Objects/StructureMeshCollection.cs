@@ -93,18 +93,6 @@ namespace UnfoldWPF.Objects
             }
         }
 
-        public void UpdateManualSlider(StructureId id, double value)
-        {
-            var child = Children[id];
-            var rot = (child.Structure as RotatingStructure);
-            if (rot != null)
-            {
-                var manualAxis = rot.Axis as ManualAxis;
-                manualAxis?.SetAngle(value);
-            }
-            Recalculate();
-        }
-
         public (Point3D, double) GetCenterAndRange()
         {
             Point3D maxPoint = Children.SelectMany(x => x.Value.Mesh.Mesh.Positions).MaxBy(x => (x - new Point3D(0,0,0)).Length);

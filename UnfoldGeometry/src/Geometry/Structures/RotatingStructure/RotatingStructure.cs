@@ -5,7 +5,7 @@ namespace Unfold.UnfoldGeometry
 {
     public abstract class RotatingStructure : IStructure
     {
-        public virtual IAxis Axis { get; private set; }
+        public virtual DataDrivenAxis Axis { get; private set; }
 
         private IRotatingStructureDef _def;
 
@@ -14,12 +14,12 @@ namespace Unfold.UnfoldGeometry
 #pragma warning restore CS8618
         {
             _def = def;
-            Axis = StructureBuilder.BuildAxis(coll, def.Axis) ?? new ManualAxis();
+            Axis = new DataDrivenAxis(def.Axis, coll);
         }
 
         public void RebuildAxis(IStructureCache coll)
         {
-            Axis = StructureBuilder.BuildAxis(coll, _def.Axis) ?? new ManualAxis();
+            Axis.RebuildAxis(coll);
         }
 
 
