@@ -30,18 +30,12 @@ namespace Unfold.UnfoldGeometry
         public Vector3 E => B + new Vector3(0, (float)-Height, 0);
         public Vector3 F => C + new Vector3(0, (float)-Height, 0);
 
-        public new static class AxisDescriptors
-        {
-            public static AxisDescriptor AOuter = new AxisDescriptor("SymmetricParalellogram.AOuter");
-            public static AxisDescriptor BOuter => new AxisDescriptor("SymmetricParalellogram.BOuter");
-        }
-
         public override IAxis? GetAxis(AxisDescriptor desc)
         {
             switch (desc)
             {
-                case var d when d == AxisDescriptors.AOuter: return AOuterAxis;
-                case var d when d == AxisDescriptors.BOuter: return BOuterAxis;
+                case var d when d == SymmetricParallelogramDef.AxisDescriptors.AOuter: return AOuterAxis;
+                case var d when d == SymmetricParallelogramDef.AxisDescriptors.BOuter: return BOuterAxis;
                 default: return base.GetAxis(desc);
             }
         }
@@ -54,7 +48,7 @@ namespace Unfold.UnfoldGeometry
             return new Vector3[] { A, C, F, A, F, D, C, B, E, C, E, F };
         }
 
-        public SymmetricParallelStructure(DefStructurePairCollection coll, SymmetricParallelogramDef def) : base(def.Axis.ToAxis(coll) ?? new ManualAxis())
+        public SymmetricParallelStructure(IStructureCache coll, SymmetricParallelogramDef def) : base(coll, def)
         {
             _def = def;
         }

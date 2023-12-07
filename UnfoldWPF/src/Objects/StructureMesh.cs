@@ -31,5 +31,11 @@ namespace UnfoldWPF.Objects
         {
             Mesh.Positions = new Point3DCollection(Structure.CalculateFaces().Select(x => x.ToPoint3D()));
         }
+
+        public void UpdateColor(Color face, Color back)
+        {
+            ((Model3D.Material as DiffuseMaterial).Brush as SolidColorBrush).Color = face;
+            ((Model3D.BackMaterial as DiffuseMaterial).Brush as SolidColorBrush).Color = back;
+        }
     }
 }

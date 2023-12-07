@@ -1,7 +1,13 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
+using System.Globalization;
+using System.Linq;
+using System.Runtime.Intrinsics.Arm;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using Unfold.Serialization;
+using Unfold.UnfoldGeometry;
 using UnfoldWPF.Objects;
 
 namespace UnfoldWPF.UserControls
@@ -14,41 +20,84 @@ namespace UnfoldWPF.UserControls
         public AxisControl()
         {
             InitializeComponent();
-            AxisType.ItemsSource = new object[] {
-                Unfold.Serialization.AxisDef.AxisTypes.Manual,
-                Unfold.Serialization.AxisDef.AxisTypes.Dependant,
-            };
-            Loaded += (obj, e) =>
-            {
-                AxisType.SelectedItem = AxisDef.Type;
+            DataContext = this;
+            AxisTypeComboBox.ItemsSource = new object[] {
+                AxisDef.AxisTypes.Manual,
+                AxisDef.AxisTypes.Dependant,
             };
         }
 
-        public static readonly DependencyProperty AxisDefProperty =
-            DependencyProperty.Register("AxisDef", typeof(Unfold.Serialization.AxisDef), typeof(AxisControl), new UIPropertyMetadata(null));
+        public static readonly DependencyProperty PairProperty =
+            DependencyProperty.Register("Pair", typeof(DefStructureVisiblePair), typeof(AxisControl), new UIPropertyMetadata(null));
 
-        public Unfold.Serialization.AxisDef AxisDef
+        public DefStructureVisiblePair Pair
         {
-            get { return (Unfold.Serialization.AxisDef)GetValue(AxisDefProperty); }
-            set { SetValue(AxisDefProperty, value); }
+            get { return (DefStructureVisiblePair)GetValue(PairProperty); }
+            set { SetValue(PairProperty, value); }
         }
 
         private void AxisType_Selected(object sender, RoutedEventArgs e)
         {
-            AxisDef.Type = (Unfold.Serialization.AxisDef.AxisTypes)AxisType.SelectedItem;
-            if (AxisDef.Type == AxisDef.AxisTypes.Manual)
+            var type = (Pair?.Def as IRotatingStructureDef)?.Axis?.Type;
+            if (type == AxisDef.AxisTypes.Manual)
             {
                 ManualSlider.Visibility = Visibility.Visible;
+                ParentStructure.Visibility = Visibility.Hidden;
+                ParentStructureTag.Visibility = Visibility.Hidden;
+                AxisDesc.Visibility = Visibility.Hidden;
+                AxisDescTag.Visibility = Visibility.Hidden;
+
+            } else if (type == AxisDef.AxisTypes.Dependant)
+            {
+                ManualSlider.Visibility = Visibility.Hidden;
+                ParentStructure.Visibility = Visibility.Visible;
+                ParentStructureTag.Visibility = Visibility.Visible;
+                AxisDesc.Visibility = Visibility.Visible;
+                AxisDescTag.Visibility = Visibility.Visible;
+
+                (Pair.Def as IRotatingStructureDef).Axis.DependantProperties ??= new AxisDef.DependantAxisProperties();
+                var dep = (Pair.Def as IRotatingStructureDef).Axis.DependantProperties;
+                ParentStructure.ItemsSource = ActiveFile.Static.Collection.Children.Values.Select(x => x.Def.Id).ToArray();
+                AxisDesc.ItemsSource = (ActiveFile.Static.Collection.Children[dep.ParentStructureId].Def as IRotatingStructureDef).GetAllAxisDescriptors();
             } else
             {
                 ManualSlider.Visibility = Visibility.Hidden;
+                ParentStructure.Visibility = Visibility.Hidden;
+                ParentStructureTag.Visibility = Visibility.Hidden;
+                AxisDesc.Visibility = Visibility.Hidden;
+                AxisDescTag.Visibility = Visibility.Hidden;
             }
-            Trace.WriteLine(AxisDef);
         }
 
         private void ManualSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            ActiveFile.Static.Collection.UpdateManualSlider(AxisDef.Id, Unfold.UnfoldGeometry.UnfoldMath.DegToRad(ManualSlider.Value));
+            var axis = ((Pair?.Structure as RotatingStructure)?.Axis);
+            axis?.SetManualAxis(UnfoldMath.DegToRad(ManualSlider.Value));
+            ActiveFile.Static.InvokeStructureUpdated();
+        }
+
+        private void ParentStructure_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var dep = (Pair.Def as IRotatingStructureDef).Axis.DependantProperties;
+            AxisDesc.ItemsSource = (ActiveFile.Static.Collection.Children[dep.ParentStructureId].Def as IRotatingStructureDef).GetAllAxisDescriptors();
+
+            var axis = ((Pair?.Structure as RotatingStructure)?.Axis);
+            axis.RebuildAxis(ActiveFile.Static.Collection);
+            ActiveFile.Static.InvokeAxisUpdated();
+        }
+
+        private void AxisDesc_Selected(object sender, RoutedEventArgs e)
+        {
+            var axis = ((Pair?.Structure as RotatingStructure)?.Axis);
+            axis.RebuildAxis(ActiveFile.Static.Collection);
+            ActiveFile.Static.InvokeAxisUpdated();
+        }
+
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var axis = ((Pair?.Structure as RotatingStructure)?.Axis);
+            axis.RebuildAxis(ActiveFile.Static.Collection);
+            ActiveFile.Static.InvokeAxisUpdated();
         }
     }
 }

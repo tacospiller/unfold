@@ -14,7 +14,7 @@ namespace Unfold.UnfoldGeometry
         }
         public ManualAxis(double initialAngle = 0, Matrix4x4? transform = null)
         {
-            Transform = transform ?? Matrix4x4.Identity;
+            Transform = (transform ?? Matrix4x4.Identity);
             Angle = initialAngle;
         }
 

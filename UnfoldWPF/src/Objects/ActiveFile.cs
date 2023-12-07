@@ -28,6 +28,7 @@ namespace UnfoldWPF.Objects
 
         public event EventHandler<ActiveFileLoadedArguments> FileLoaded = delegate { };
         public event EventHandler<StructureUpdatedArguments> StructureUpdated = delegate { };
+        public event EventHandler<StructureUpdatedArguments> AxisUpdated = delegate { };
 
         public void Load(string path)
         {
@@ -43,6 +44,11 @@ namespace UnfoldWPF.Objects
         public void InvokeStructureUpdated()
         {
             StructureUpdated(this, new StructureUpdatedArguments());
+        }
+
+        public void InvokeAxisUpdated()
+        {
+            AxisUpdated(this, new StructureUpdatedArguments());
         }
     }
 }

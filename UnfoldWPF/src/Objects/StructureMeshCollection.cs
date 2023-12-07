@@ -11,29 +11,69 @@ namespace UnfoldWPF.Objects
 {
     public record class DefStructureVisiblePair
     {
-        public DefStructurePair Pair { get; set; }
-        public bool Selected { get; set; } = false;
-        public StructureMesh Mesh { get; set; }
+        public IStructureDef Def { get; set; }
+        public IStructure? Structure { get; set; }
+        private bool _selected = false;
+        public bool Selected
+        {
+            get
+            {
+                return _selected;
+            }
+            set
+            {
+                if (_selected != value)
+                {
+                    if (value)
+                    {
+                        Mesh.UpdateColor(Colors.IndianRed, Colors.DarkOrange);
+                    } else
+                    {
+                        Mesh.UpdateColor(DisplayHelper.RandomColor(), DisplayHelper.RandomColor());
+                    }
+                }
+                _selected = value;
+            }
+        }
+        public StructureMesh? Mesh { get; set; }
+        public DefStructureVisiblePair DeepCopy()
+        {
+            return new DefStructureVisiblePair
+            {
+                Def = Def,
+                Structure = Structure,
+                Mesh = Mesh,
+                Selected = false
+            };
+        }
     }
 
-    public class StructureMeshCollection
+    public class StructureMeshCollection : IStructureCache
     {
         public Dictionary<StructureId, DefStructureVisiblePair> Children { get; } = new Dictionary<StructureId, DefStructureVisiblePair>();
 
         public DefStructureVisiblePair[] Freeze()
         {
-            return Children.Values.ToArray();
+            return Children.Values.Select(x => x.DeepCopy()).ToArray();
         }
+
+        public IStructure GetStructure(StructureId structureId)
+        {
+            var pair = Children[structureId];
+            if (pair != null)
+            {
+                pair.Structure ??= StructureBuilder.BuildStructure(this, pair.Def);
+                return pair.Structure;
+            }
+            return null;
+        }
+
         public void ReloadFromDefs(List<IStructureDef> defs)
         {
             Children.Clear();
             foreach (var def in defs)
             {
-                var pair = new DefStructurePair { Def = def };
-                Children.Add(def.Id, new DefStructureVisiblePair
-                {
-                    Pair = pair,
-                });
+                Children.Add(def.Id, new DefStructureVisiblePair { Def = def });
             }
 
             RecreateAllMeshes();
@@ -41,26 +81,16 @@ namespace UnfoldWPF.Objects
 
         public void RecreateAllMeshes()
         {
-            var coll = new DefStructurePairCollection();
-            coll.AddRange(Children.Values.Select(x => x.Pair));
-
             foreach (var pair in Children)
             {
-                var structure = pair.Value.Pair.GetStructure(coll);
+                pair.Value.Structure = null;
+                pair.Value.Mesh = null;
+            }
+            foreach (var pair in Children)
+            {
+                var structure = GetStructure(pair.Value.Def.Id);
                 pair.Value.Mesh = new StructureMesh(structure, DisplayHelper.RandomColor(), DisplayHelper.RandomColor());
             }
-        }
-
-        public void UpdateManualSlider(StructureId id, double value)
-        {
-            var child = Children[id];
-            var rot = (child.Pair.Structure as RotatingStructure);
-            if (rot != null)
-            {
-                var manualAxis = rot.Axis as ManualAxis;
-                manualAxis?.SetAngle(value);
-            }
-            Recalculate();
         }
 
         public (Point3D, double) GetCenterAndRange()

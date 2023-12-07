@@ -3,7 +3,7 @@ using Unfold.UnfoldGeometry;
 
 namespace Unfold.Serialization
 {
-    public record class SymmetricVFoldDef : IStructureDef
+    public record class SymmetricVFoldDef : IRotatingStructureDef
     {
         public StructureId Id { get; set; }
         public AxisDef Axis { get; set; }
@@ -11,10 +11,23 @@ namespace Unfold.Serialization
         public double DistD { get; set; }
         public double Theta { get; set; }
         public double Psi { get; set; }
-
-        public IStructure CreateStructure(DefStructurePairCollection coll)
+        public static class AxisDescriptors
         {
-            return new SymmetricVFoldStructure(coll, this);
+            public static AxisDescriptor AOuter = new AxisDescriptor("SymmetricVFold.AOuter");
+            public static AxisDescriptor COuter => new AxisDescriptor("SymmetricVFold.COuter");
+            public static AxisDescriptor AInner = new AxisDescriptor("SymmetricVFold.AInner");
+            public static AxisDescriptor CInner = new AxisDescriptor("SymmetricVFold.CInner");
+        }
+
+        public AxisDescriptor[] GetAllAxisDescriptors()
+        {
+            return new AxisDescriptor[] {
+                IRotatingStructureDef.AxisDescriptors.BaseAxis,
+                AxisDescriptors.AOuter,
+                AxisDescriptors.COuter,
+                AxisDescriptors.AInner,
+                AxisDescriptors.CInner
+            };
         }
     }
 }

@@ -27,6 +27,6 @@ namespace Unfold.UnfoldGeometry
             C, Y, O, C, O, F};
         }
 
-        public AngleDividerStructure(IAxis axis) : base(axis) { }
+        public AngleDividerStructure(IAxis axis) : base(null, null) { }
     }
 }

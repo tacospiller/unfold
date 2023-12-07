@@ -1,34 +1,62 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Input;
 using Microsoft.Win32;
+using Unfold.Serialization;
 using UnfoldWPF.Objects;
+using UnfoldWPF.UserControls;
 
 namespace UnfoldWPF.Windows
 {
     public partial class MainWindow : Window
     {
+        private List<SelectionChangedEventHandler> _selectionUpdaters = new List<SelectionChangedEventHandler>();
         public MainWindow()
         {
             InitializeComponent();
-            AddStructures();
-            ActiveFile.Static.FileLoaded += (object? sender, ActiveFileLoadedArguments e) =>
+            ActiveFile.Static.FileLoaded += (o, e) =>
             {
-                AddStructures();
+                foreach (var handler in _selectionUpdaters)
+                {
+                    Structures.SelectionChanged -= handler;
+                }
+                _selectionUpdaters.Clear();
+
+                foreach (var (key, val) in ActiveFile.Static.Collection.Children)
+                {
+                    object control = null;
+                    switch (val.Def)
+                    {
+                        case BaseCardDef bcd:
+                            control = new BaseCardListItem { Pair = val };
+                            break;
+                        case SymmetricVFoldDef svd:
+                            control = new SymmetricVFoldListItem { Pair = val };
+                            break;
+                    }
+
+                    if (control == null)
+                    {
+                        continue;
+                    }
+
+                    Structures.Items.Add(control);
+
+                    var del = new SelectionChangedEventHandler((object o, SelectionChangedEventArgs e) =>
+                    {
+                        val.Selected = Structures.SelectedItem == control;
+                    });
+                    _selectionUpdaters.Add(del);
+                    Structures.SelectionChanged += del;
+                }
             };
         }
 
-        private void AddStructures()
-        {
-            var children = ActiveFile.Static.FileContent;
-            if (children == null)
-            {
-                return;
-            }
-            Structures.ItemsSource = children;
-        }
 
         private void Save_Executed(object sender, ExecutedRoutedEventArgs e)
         {
@@ -56,9 +84,5 @@ namespace UnfoldWPF.Windows
             }
         }
 
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            ActiveFile.Static.InvokeStructureUpdated();
-        }
     }
 }

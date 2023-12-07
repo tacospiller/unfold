@@ -23,32 +23,5 @@ namespace Unfold.Serialization
         public StructureId Id { get; set; }
         public AxisTypes Type { get; set; }
         public DependantAxisProperties? DependantProperties { get; set; }
-
-
-        public IAxis? ToAxis(DefStructurePairCollection coll)
-        {
-            if (Type == AxisTypes.Manual)
-            {
-                return new ManualAxis();
-            }
-            else if (DependantProperties == null)
-            {
-                return null;
-            }
-            else
-            {
-                var obj = coll.GetChild(DependantProperties.ParentStructureId);
-                if (obj == null)
-                {
-                    return null;
-                }
-                var axis = obj.GetStructure(coll)?.GetAxis(DependantProperties.AxisDescriptor);
-                if (DependantProperties.OffsetY != 0)
-                {
-                    return axis?.OffsetY(DependantProperties.OffsetY);
-                }
-                return axis;
-            }
-        }
     }
 }

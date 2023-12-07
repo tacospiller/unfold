@@ -7,6 +7,7 @@ namespace Unfold.UnfoldGeometry
         public Matrix4x4 Transform => _transformGetter();
         public double Angle => _angleGetter();
 
+
         private Func<Matrix4x4> _transformGetter;
         private Func<double> _angleGetter;
 

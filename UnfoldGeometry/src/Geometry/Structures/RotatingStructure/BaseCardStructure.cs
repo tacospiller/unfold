@@ -24,7 +24,7 @@ namespace Unfold.UnfoldGeometry
             };
         }
 
-        public BaseCardStructure(DefStructurePairCollection coll, BaseCardDef def) : base(def.Axis.ToAxis(coll) ?? new ManualAxis())
+        public BaseCardStructure(IStructureCache coll, BaseCardDef def) : base(coll, def)
         {
             _def = def;
         }

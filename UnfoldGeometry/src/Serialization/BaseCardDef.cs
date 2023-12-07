@@ -3,17 +3,16 @@ using Unfold.UnfoldGeometry;
 
 namespace Unfold.Serialization
 {
-    public record class BaseCardDef : IStructureDef
+    public record class BaseCardDef : IRotatingStructureDef
     {
         public StructureId Id { get; set; }
         public double Width { get; set; }
         public double Height { get; set; }
         public AxisDef Axis { get; set; }
 
-
-        public IStructure CreateStructure(DefStructurePairCollection coll)
+        public AxisDescriptor[] GetAllAxisDescriptors()
         {
-            return new BaseCardStructure(coll, this);
+            return new AxisDescriptor[] { IRotatingStructureDef.AxisDescriptors.BaseAxis };
         }
     }
 }

@@ -27,17 +27,13 @@ namespace Unfold.UnfoldGeometry
             return new Vector3[] { B, A, D, C, B, D };
         }
 
-        public new static class AxisDescriptors
-        {
-            public static AxisDescriptor AOuter = new AxisDescriptor("SymmetricVFold.AOuter");
-            public static AxisDescriptor COuter => new AxisDescriptor("SymmetricVFold.COuter");
-        }
+
         public override IAxis? GetAxis(AxisDescriptor desc)
         {
             switch (desc)
             {
-                case var d when d == AxisDescriptors.AOuter: return AOuterAxis;
-                case var d when d == AxisDescriptors.COuter: return COuterAxis;
+                case var d when d == SymmetricVFoldDef.AxisDescriptors.AOuter: return AOuterAxis;
+                case var d when d == SymmetricVFoldDef.AxisDescriptors.COuter: return COuterAxis;
                 default: return base.GetAxis(desc);
             }
         }
@@ -97,7 +93,7 @@ namespace Unfold.UnfoldGeometry
             }
         }
 
-        public SymmetricVFoldStructure(DefStructurePairCollection coll, SymmetricVFoldDef def) : base(def.Axis.ToAxis(coll) ?? new ManualAxis())
+        public SymmetricVFoldStructure(IStructureCache coll, SymmetricVFoldDef def) : base(coll, def)
         {
             _def = def;
         }
