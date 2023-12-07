@@ -31,7 +31,7 @@
         <ComboBox Grid.Column="1" Grid.Row="1" Name="ParentStructure" SelectionChanged="ParentStructure_SelectionChanged" SelectedItem="{Binding Path=Pair.Def.Axis.DependantProperties.ParentStructureId, Mode=TwoWay}" DisplayMemberPath="Id"></ComboBox>
         <TextBlock Grid.Column ="0"  Grid.Row="2" Name="AxisDescTag" Text="AxisDescriptor" Style="{StaticResource FieldName}" Margin="0 0 5 0" />
         <ComboBox Grid.Column="1" Grid.Row="2" Name="AxisDesc" SelectionChanged="AxisDesc_Selected" SelectedItem="{Binding Path=Pair.Def.Axis.DependantProperties.AxisDescriptor, Mode=TwoWay}" DisplayMemberPath="Id"></ComboBox>
-        <TextBlock Grid.Column ="0"  Grid.Row="3" Text="Type" Style="{StaticResource FieldName}" Margin="0 0 5 0" />
+        <TextBlock Grid.Column ="0"  Grid.Row="3" Text="OffsetY" Style="{StaticResource FieldName}" Margin="0 0 5 0" />
         <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding Path=Pair.Def.Axis.DependantProperties.OffsetY, Mode=TwoWay}" TextChanged="TextBox_TextChanged"></TextBox>
     </Grid>
 </UserControl>
